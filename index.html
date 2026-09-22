@@ -1,0 +1,3962 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOIR — Luxury Fashion</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Bootstrap Datepicker CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <style>
+        :root {
+            --black: #0a0a0a;
+            --dark: #111111;
+            --card: #161616;
+            --border: #222222;
+            --gray: #888888;
+            --light-gray: #cccccc;
+            --off-white: #f5f5f0;
+            --accent: #c9a96e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* ===== CUSTOM CURSOR ===== */
+        @media (pointer: fine) {
+            body {
+                cursor: none;
+            }
+            a, button, .filter-btn, .size-option, .product-card, .product-wishlist,
+            .add-to-cart-btn, .nav-link, .nav-icon-link, .social-link,
+            .load-more-btn, .btn-noir, .carousel-control-prev, .carousel-control-next {
+                cursor: none;
+            }
+        }
+        .cursor-dot {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            transition: transform 0.1s ease, opacity 0.3s ease;
+            transform: translate(-50%, -50%);
+        }
+        .cursor-ring {
+            position: fixed;
+            width: 36px;
+            height: 36px;
+            border: 1px solid rgba(201, 169, 110, 0.4);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99998;
+            transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
+            transform: translate(-50%, -50%);
+        }
+        .cursor-ring.hover {
+            width: 56px;
+            height: 56px;
+            border-color: rgba(201, 169, 110, 0.7);
+        }
+        .cursor-dot.hover {
+            transform: translate(-50%, -50%) scale(2);
+            opacity: 0.5;
+        }
+
+        body {
+            background-color: var(--black);
+            color: var(--off-white);
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            overflow-x: hidden;
+            letter-spacing: 0.3px;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--black); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--gray); }
+
+        /* ===== NAVBAR ===== */
+        .navbar-noir {
+            background: rgba(10, 10, 10, 0.97) !important;
+            backdrop-filter: blur(30px);
+            border-bottom: 1px solid var(--border);
+            padding: 18px 0;
+            transition: all 0.4s ease;
+        }
+
+        .navbar-noir.scrolled {
+            padding: 10px 0;
+        }
+
+        .brand-noir {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 300;
+            font-size: 32px;
+            color: var(--off-white) !important;
+            letter-spacing: 12px;
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+
+        .navbar-noir .nav-link {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            font-size: 12px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--gray) !important;
+            padding: 8px 22px !important;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-noir .nav-link:hover,
+        .navbar-noir .nav-item.active .nav-link {
+            color: var(--off-white) !important;
+        }
+
+        .nav-icons {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-left: 30px;
+        }
+
+        .nav-icon-link {
+            color: var(--gray);
+            font-size: 16px;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-icon-link:hover { color: var(--off-white); }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -10px;
+            background: var(--accent);
+            color: var(--black);
+            font-size: 9px;
+            font-weight: 600;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .navbar-toggler {
+            border-color: var(--border) !important;
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28245, 245, 240, 0.7%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='1' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+        }
+
+        /* ===== HERO ===== */
+        .hero-section {
+            height: 100vh;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: url('https://images.unsplash.com/photo-1509631174183-56a0793e4c75?w=1600&h=900&fit=crop') center/cover no-repeat;
+            opacity: 0.35;
+            filter: grayscale(40%);
+            will-change: transform;
+        }
+
+        .hero-video {
+            position: absolute;
+            top: 50%; left: 50%;
+            min-width: 100%; min-height: 100%;
+            width: auto; height: auto;
+            transform: translate(-50%, -50%);
+            opacity: 0.3;
+            filter: grayscale(40%);
+            object-fit: cover;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(10,10,10,0.3), rgba(10,10,10,0.8));
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .hero-label {
+            font-size: 11px;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 24px;
+            font-weight: 400;
+        }
+
+        .hero-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 300;
+            font-size: 72px;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            color: var(--off-white);
+            margin-bottom: 30px;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 14px;
+            color: var(--gray);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 200;
+            margin-bottom: 50px;
+        }
+
+        .btn-noir {
+            border: 1px solid var(--off-white);
+            background: transparent;
+            color: var(--off-white);
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            padding: 16px 50px;
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .btn-noir:hover {
+            background: var(--off-white);
+            color: var(--black);
+            text-decoration: none;
+        }
+
+        .btn-accent {
+            border: 1px solid var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-accent:hover {
+            background: var(--accent);
+            color: var(--black);
+        }
+
+        /* ===== SEARCH ===== */
+        .search-section {
+            padding: 50px 0 20px;
+        }
+
+        .search-wrapper {
+            position: relative;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        .search-input {
+            background: transparent !important;
+            border: none !important;
+            border-bottom: 1px solid var(--border) !important;
+            border-radius: 0 !important;
+            padding: 16px 0 !important;
+            padding-right: 40px !important;
+            color: var(--off-white) !important;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent) !important;
+            box-shadow: none !important;
+        }
+
+        .search-input::placeholder {
+            color: var(--gray);
+            font-weight: 200;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 16px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .search-icon:hover { color: var(--off-white); }
+
+        #autocompleteResults {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(22, 22, 22, 0.98);
+            border: 1px solid var(--border);
+            border-top: none;
+            backdrop-filter: blur(30px);
+        }
+
+        #autocompleteResults .list-group-item {
+            background: transparent !important;
+            border: none !important;
+            border-bottom: 1px solid rgba(34,34,34,0.5) !important;
+            color: var(--light-gray) !important;
+            padding: 14px 0 !important;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+        }
+
+        #autocompleteResults .list-group-item:last-child {
+            border-bottom: none !important;
+        }
+
+        #autocompleteResults .list-group-item:hover {
+            color: var(--off-white) !important;
+            padding-left: 8px !important;
+        }
+
+        /* ===== SECTION TITLES ===== */
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-label {
+            font-size: 10px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 16px;
+            font-weight: 400;
+        }
+
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 300;
+            font-size: 42px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--off-white);
+        }
+
+        .section-line {
+            width: 40px;
+            height: 1px;
+            background: var(--accent);
+            margin: 20px auto 0;
+        }
+
+        /* ===== BRANDS TICKER ===== */
+        .brands-section {
+            padding: 60px 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .brands-track {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            animation: ticker 30s linear infinite;
+            white-space: nowrap;
+        }
+
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .brand-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: var(--gray);
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+
+        .brand-name:hover { opacity: 1; }
+
+        /* ===== CAROUSEL ===== */
+        .carousel-section {
+            padding: 80px 0;
+        }
+
+        .carousel-noir {
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .carousel-noir .carousel-item {
+            height: 550px;
+        }
+
+        .carousel-noir .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(30%);
+            transition: filter 0.5s ease;
+        }
+
+        .carousel-noir:hover .carousel-item.active img {
+            filter: grayscale(0%);
+        }
+
+        .carousel-noir .carousel-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%; height: 50%;
+            background: linear-gradient(to top, rgba(10,10,10,0.9), transparent);
+        }
+
+        .carousel-noir .carousel-caption {
+            bottom: 50px;
+            text-align: left;
+            left: 8%;
+            right: 8%;
+        }
+
+        .carousel-noir .carousel-caption h5 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 36px;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .carousel-noir .carousel-caption p {
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gray);
+            font-weight: 200;
+        }
+
+        .carousel-noir .carousel-indicators li {
+            width: 24px;
+            height: 2px;
+            background: rgba(245, 245, 240, 0.2);
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-noir .carousel-indicators li.active {
+            background: var(--accent);
+            width: 40px;
+        }
+
+        .carousel-noir .carousel-control-prev,
+        .carousel-noir .carousel-control-next {
+            width: 50px;
+            height: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(10, 10, 10, 0.5);
+            border: 1px solid rgba(245,245,240,0.1);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-noir:hover .carousel-control-prev,
+        .carousel-noir:hover .carousel-control-next {
+            opacity: 1;
+        }
+
+        .carousel-noir .carousel-control-prev { left: 20px; }
+        .carousel-noir .carousel-control-next { right: 20px; }
+
+        /* ===== PRODUCT CARDS ===== */
+        .products-section {
+            padding: 80px 0;
+        }
+
+        .product-card {
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            margin-bottom: 30px;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            border-color: rgba(201, 169, 110, 0.3);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+
+        .product-img {
+            height: 320px;
+            overflow: hidden;
+            position: relative;
+            background: var(--dark);
+        }
+
+        .product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease, filter 0.4s ease;
+            filter: grayscale(20%);
+        }
+
+        .product-card:hover .product-img img {
+            transform: scale(1.05);
+            filter: grayscale(0%);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            padding: 4px 12px;
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-radius: 2px;
+        }
+
+        .badge-new { background: var(--accent); color: var(--black); }
+        .badge-sale { background: #c0392b; color: #fff; }
+        .badge-sold-out { background: var(--border); color: var(--gray); }
+
+        .product-wishlist {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 36px;
+            height: 36px;
+            background: rgba(10,10,10,0.6);
+            border: 1px solid rgba(245,245,240,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            font-size: 14px;
+            opacity: 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .product-card:hover .product-wishlist {
+            opacity: 1;
+        }
+
+        .product-wishlist:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .product-body {
+            padding: 20px;
+        }
+
+        .product-brand {
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 400;
+            margin-bottom: 6px;
+        }
+
+        .product-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 20px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            color: var(--off-white);
+            margin-bottom: 12px;
+        }
+
+        .product-price {
+            font-size: 14px;
+            font-weight: 300;
+            color: var(--light-gray);
+            letter-spacing: 1px;
+        }
+
+        .product-price .old-price {
+            text-decoration: line-through;
+            color: var(--gray);
+            margin-right: 10px;
+            font-weight: 200;
+        }
+
+        .product-sizes {
+            margin-top: 14px;
+            display: flex;
+            gap: 6px;
+        }
+
+        .size-option {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 400;
+            color: var(--gray);
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .size-option:hover {
+            border-color: var(--off-white);
+            color: var(--off-white);
+        }
+
+        /* ===== 3 COLUMNS (Bootstrap Grid) ===== */
+        .categories-section {
+            padding: 80px 0;
+        }
+
+        .category-card {
+            height: 450px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 30px;
+        }
+
+        .category-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(40%);
+            transition: all 0.6s ease;
+        }
+
+        .category-card:hover img {
+            filter: grayscale(0%);
+            transform: scale(1.05);
+        }
+
+        .category-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%; height: 60%;
+            background: linear-gradient(to top, rgba(10,10,10,0.85), transparent);
+        }
+
+        .category-content {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            z-index: 2;
+        }
+
+        .category-content h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 30px;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--off-white);
+            margin-bottom: 8px;
+        }
+
+        .category-content span {
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 300;
+        }
+
+        /* ===== CALENDAR ===== */
+        .calendar-section {
+            padding: 80px 0;
+        }
+
+        .calendar-wrapper {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 40px;
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
+        .calendar-wrapper label {
+            font-size: 10px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 400;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .datepicker-input {
+            background: transparent !important;
+            border: none !important;
+            border-bottom: 1px solid var(--border) !important;
+            border-radius: 0 !important;
+            padding: 14px 0 !important;
+            color: var(--off-white) !important;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            transition: border-color 0.3s ease;
+        }
+
+        .datepicker-input:focus {
+            border-color: var(--accent) !important;
+            box-shadow: none !important;
+        }
+
+        .bootstrap-datepicker .dropdown-menu {
+            background: rgba(22, 22, 22, 0.98) !important;
+            border: 1px solid var(--border) !important;
+            border-radius: 4px !important;
+        }
+
+        .bootstrap-datepicker table td,
+        .bootstrap-datepicker table th {
+            color: var(--light-gray) !important;
+        }
+
+        .bootstrap-datepicker table td.day:hover {
+            background: rgba(201, 169, 110, 0.15) !important;
+        }
+
+        .bootstrap-datepicker table td.active,
+        .bootstrap-datepicker table td.active:hover {
+            background: var(--accent) !important;
+            color: var(--black) !important;
+        }
+
+        .bootstrap-datepicker .datepicker-switch,
+        .bootstrap-datepicker .prev,
+        .bootstrap-datepicker .next {
+            color: var(--accent) !important;
+        }
+
+        /* ===== NEWSLETTER ===== */
+        .newsletter-section {
+            padding: 80px 0;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+
+        .newsletter-input {
+            background: transparent !important;
+            border: none !important;
+            border-bottom: 1px solid var(--border) !important;
+            border-radius: 0 !important;
+            padding: 16px 0 !important;
+            color: var(--off-white) !important;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 200;
+            letter-spacing: 1px;
+            transition: border-color 0.3s ease;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .newsletter-input:focus {
+            border-color: var(--accent) !important;
+            box-shadow: none !important;
+        }
+
+        .newsletter-input::placeholder {
+            color: var(--gray);
+            font-weight: 200;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer-noir {
+            border-top: 1px solid var(--border);
+            padding: 60px 0 30px;
+        }
+
+        .footer-brand {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 300;
+            font-size: 28px;
+            letter-spacing: 10px;
+            text-transform: uppercase;
+            color: var(--off-white);
+            margin-bottom: 20px;
+        }
+
+        .footer-text {
+            color: var(--gray);
+            font-size: 13px;
+            font-weight: 200;
+            line-height: 1.8;
+        }
+
+        .footer-heading {
+            font-size: 10px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--off-white);
+            font-weight: 400;
+            margin-bottom: 24px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li { margin-bottom: 12px; }
+
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 200;
+            letter-spacing: 0.5px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover { color: var(--off-white); }
+
+        .social-links {
+            display: flex;
+            gap: 16px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border);
+            padding-top: 24px;
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--gray);
+            font-size: 11px;
+            letter-spacing: 1px;
+            font-weight: 200;
+        }
+
+        /* ===== ADD TO CART BUTTON ===== */
+        .add-to-cart-btn {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 10px 24px;
+            border: 1px solid var(--accent);
+            background: transparent;
+            color: var(--accent);
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-to-cart-btn:hover {
+            background: var(--accent);
+            color: var(--black);
+        }
+
+        .size-option.selected {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .product-wishlist.active {
+            color: var(--accent) !important;
+            opacity: 1 !important;
+        }
+
+        .product-wishlist.active i {
+            font-weight: 900;
+        }
+
+        /* ===== HIDDEN PRODUCTS ===== */
+        .hidden-products {
+            display: none;
+        }
+
+        .load-more-btn {
+            display: block;
+            margin: 40px auto 0;
+            padding: 14px 40px;
+            border: 1px solid var(--accent);
+            background: transparent;
+            color: var(--accent);
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .load-more-btn:hover {
+            background: var(--accent);
+            color: var(--black);
+        }
+
+        /* ===== TOAST ===== */
+        .toast-noir {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            padding: 14px 24px;
+            color: var(--off-white);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            opacity: 0;
+            transform: translateX(40px);
+            transition: all 0.4s ease;
+            min-width: 260px;
+        }
+
+        .toast-noir.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* ===== CART ITEM ===== */
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .cart-item:last-child { border-bottom: none; }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-brand {
+            font-size: 9px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 400;
+        }
+
+        .cart-item-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 16px;
+            color: var(--off-white);
+            font-weight: 400;
+        }
+
+        .cart-item-size {
+            font-size: 11px;
+            color: var(--gray);
+            font-weight: 200;
+        }
+
+        .cart-item-price {
+            color: var(--light-gray);
+            font-size: 14px;
+            font-weight: 300;
+            margin: 0 16px;
+        }
+
+        .cart-item-remove {
+            background: none;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+            font-size: 14px;
+            transition: color 0.2s ease;
+            padding: 4px;
+        }
+
+        .cart-item-remove:hover { color: #c0392b; }
+
+        /* ===== FADE ANIMATION ===== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== STATS / COUNTERS ===== */
+        .stats-section {
+            padding: 80px 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .stat-number {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 56px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            color: var(--accent);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gray);
+            font-weight: 300;
+        }
+
+        /* ===== INSTAGRAM FEED ===== */
+        .instagram-section {
+            padding: 80px 0;
+        }
+
+        .insta-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 4px;
+        }
+
+        .insta-item {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 1;
+            cursor: pointer;
+        }
+
+        .insta-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(60%);
+            transition: all 0.5s ease;
+        }
+
+        .insta-item:hover img {
+            filter: grayscale(0%);
+            transform: scale(1.08);
+        }
+
+        .insta-item::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(10,10,10,0.4);
+            transition: background 0.3s ease;
+        }
+
+        .insta-item:hover::after {
+            background: transparent;
+        }
+
+        .insta-icon {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            color: #fff;
+            font-size: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .insta-item:hover .insta-icon {
+            opacity: 1;
+        }
+
+        /* ===== VIDEO SHOWCASE ===== */
+        .video-showcase-section {
+            padding: 80px 0;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 12px;
+            height: 560px;
+        }
+
+        .video-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            background: var(--dark);
+        }
+
+        .video-card video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(40%);
+            transition: filter 0.6s ease, transform 0.6s ease;
+        }
+
+        .video-card:hover video {
+            filter: grayscale(0%);
+            transform: scale(1.03);
+        }
+
+        .video-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%; height: 55%;
+            background: linear-gradient(to top, rgba(10,10,10,0.85), transparent);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .video-card-info {
+            position: absolute;
+            bottom: 24px;
+            left: 28px;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .video-card-label {
+            font-size: 9px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 400;
+            margin-bottom: 6px;
+        }
+
+        .video-card-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--off-white);
+        }
+
+        .video-play-icon {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 56px;
+            height: 56px;
+            border: 1px solid rgba(245,245,240,0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--off-white);
+            font-size: 18px;
+            z-index: 2;
+            background: rgba(10,10,10,0.4);
+            backdrop-filter: blur(8px);
+            transition: all 0.4s ease;
+            pointer-events: none;
+        }
+
+        .video-card:hover .video-play-icon {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(1.3);
+        }
+
+        .video-card.featured {
+            grid-row: 1 / 3;
+        }
+
+        .video-card.featured .video-card-title {
+            font-size: 30px;
+            letter-spacing: 4px;
+        }
+
+        .video-card.featured .video-play-icon {
+            width: 72px;
+            height: 72px;
+            font-size: 22px;
+        }
+
+        @media (max-width: 768px) {
+            .video-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: 320px 200px 200px;
+                height: auto;
+            }
+            .video-card.featured { grid-row: auto; }
+            .insta-grid { grid-template-columns: repeat(3, 1fr); }
+            .stat-number { font-size: 40px; }
+        }
+
+        /* ===== PRELOADER ===== */
+        .preloader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--black);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+        .preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .preloader-brand {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 300;
+            font-size: 48px;
+            letter-spacing: 16px;
+            text-transform: uppercase;
+            color: var(--off-white);
+            animation: preloaderFade 1.5s ease infinite alternate;
+        }
+        .preloader-line {
+            width: 60px;
+            height: 1px;
+            background: var(--accent);
+            margin-top: 24px;
+            animation: preloaderWidth 1.5s ease infinite alternate;
+        }
+        @keyframes preloaderFade {
+            0% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+        @keyframes preloaderWidth {
+            0% { width: 20px; }
+            100% { width: 80px; }
+        }
+
+        /* ===== SCROLL PROGRESS ===== */
+        .scroll-progress {
+            position: fixed;
+            top: 0; left: 0;
+            height: 2px;
+            background: var(--accent);
+            z-index: 99998;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        /* ===== COUNTDOWN ===== */
+        .countdown-section {
+            padding: 80px 0;
+            border-top: 1px solid var(--border);
+        }
+        .countdown-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 40px;
+        }
+        .countdown-item {
+            text-align: center;
+        }
+        .countdown-number {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 64px;
+            font-weight: 300;
+            color: var(--accent);
+            line-height: 1;
+            letter-spacing: 2px;
+            animation: countdownPulse 2s ease-in-out infinite;
+        }
+        @keyframes countdownPulse {
+            0%, 100% { opacity: 1; text-shadow: 0 0 0 transparent; }
+            50% { opacity: 0.85; text-shadow: 0 0 20px rgba(201, 169, 110, 0.3); }
+        }
+        .countdown-separator {
+            animation: separatorBlink 1s ease-in-out infinite;
+        }
+        @keyframes separatorBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+        .countdown-label {
+            font-size: 10px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gray);
+            font-weight: 300;
+            margin-top: 8px;
+        }
+        .countdown-separator {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 48px;
+            color: var(--accent);
+            line-height: 1;
+            align-self: flex-start;
+            margin-top: 6px;
+        }
+        @media (max-width: 768px) {
+            .countdown-wrapper { gap: 20px; }
+            .countdown-number { font-size: 40px; }
+        }
+
+        /* ===== QUICK VIEW MODAL ===== */
+        .quick-view-content {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+        }
+        .quick-view-img {
+            width: 100%;
+            height: 420px;
+            object-fit: cover;
+            filter: grayscale(20%);
+            border-radius: 4px 4px 0 0;
+        }
+        .quick-view-body {
+            padding: 30px;
+        }
+        .quick-view-brand {
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 400;
+            margin-bottom: 8px;
+        }
+        .quick-view-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            color: var(--off-white);
+            margin-bottom: 16px;
+        }
+        .quick-view-price {
+            font-size: 20px;
+            font-weight: 300;
+            color: var(--light-gray);
+            margin-bottom: 20px;
+        }
+        .quick-view-price .old-price {
+            text-decoration: line-through;
+            color: var(--gray);
+            margin-right: 10px;
+            font-weight: 200;
+        }
+        .quick-view-desc {
+            color: var(--gray);
+            font-size: 13px;
+            font-weight: 200;
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+        .quick-view-material {
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            margin-bottom: 24px;
+        }
+        .quick-view-material-title {
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 400;
+            margin-bottom: 10px;
+        }
+        .quick-view-material-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .quick-view-material-list li {
+            font-size: 12px;
+            font-weight: 200;
+            color: var(--light-gray);
+            letter-spacing: 0.5px;
+            padding: 4px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        .quick-view-material-list li span:last-child {
+            color: var(--gray);
+        }
+        .quick-view-sizes {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+        .quick-view-sizes .size-option {
+            width: 40px;
+            height: 40px;
+        }
+
+        /* ===== BACK TO TOP ===== */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 44px;
+            height: 44px;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            background: rgba(10,10,10,0.8);
+            backdrop-filter: blur(10px);
+            color: var(--gray);
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            z-index: 9990;
+        }
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .back-to-top:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* ===== SUPPORT CHAT ===== */
+
+        /* ===== PARALLAX PHILOSOPHY ===== */
+        .philosophy-section {
+            position: relative;
+            height: 500px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .philosophy-bg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 120%;
+            background: url('https://images.unsplash.com/photo-1558618666-fcd25c2cd820?w=1600&h=900&fit=crop') center/cover no-repeat;
+            filter: grayscale(60%) brightness(0.3);
+            will-change: transform;
+        }
+        .philosophy-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(180deg, rgba(10,10,10,0.6) 0%, rgba(10,10,10,0.85) 100%);
+        }
+        .philosophy-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 700px;
+            padding: 0 30px;
+        }
+        .philosophy-label {
+            font-size: 10px; letter-spacing: 6px; text-transform: uppercase;
+            color: var(--accent); font-weight: 400; margin-bottom: 24px;
+        }
+        .philosophy-quote {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 36px; font-weight: 300;
+            line-height: 1.5; letter-spacing: 1px;
+            color: var(--off-white);
+            margin-bottom: 24px;
+        }
+        .philosophy-author {
+            font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+            color: var(--gray); font-weight: 300;
+        }
+        .philosophy-divider {
+            width: 40px; height: 1px;
+            background: var(--accent);
+            margin: 20px auto 16px;
+        }
+        @media (max-width: 768px) {
+            .philosophy-section { height: 400px; }
+            .philosophy-quote { font-size: 26px; }
+        }
+
+        /* ===== TRENDS HORIZONTAL SCROLL ===== */
+        .trends-section { padding: 80px 0 60px; }
+        .trends-scroll-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+        .trends-track {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            padding: 10px 0 20px;
+            scrollbar-width: none;
+        }
+        .trends-track::-webkit-scrollbar { display: none; }
+        .trend-card {
+            flex: 0 0 280px;
+            scroll-snap-align: start;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+        .trend-card:hover {
+            border-color: rgba(201,169,110,0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        }
+        .trend-card-img {
+            height: 340px; overflow: hidden;
+        }
+        .trend-card-img img {
+            width: 100%; height: 100%; object-fit: cover;
+            filter: grayscale(20%);
+            transition: all 0.5s ease;
+        }
+        .trend-card:hover .trend-card-img img {
+            transform: scale(1.05);
+            filter: grayscale(0%);
+        }
+        .trend-card-body { padding: 16px; }
+        .trend-card-brand {
+            font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+            color: var(--accent); font-weight: 400; margin-bottom: 4px;
+        }
+        .trend-card-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px; color: var(--off-white); font-weight: 400;
+            margin-bottom: 8px;
+        }
+        .trend-card-price { font-size: 14px; color: var(--light-gray); font-weight: 300; }
+        .trend-nav {
+            display: flex; gap: 8px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        .trend-nav-btn {
+            width: 40px; height: 40px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--gray);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+        .trend-nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* ===== TOP PICKS ===== */
+        .toppicks-section { padding: 80px 0 0; }
+        .toppicks-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 768px) { .toppicks-grid { grid-template-columns: 1fr; } }
+        .toppick-card {
+            position: relative;
+            height: 360px;
+            border-radius: 4px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+        .toppick-card:hover { transform: scale(0.99); }
+        .toppick-card img {
+            width: 100%; height: 100%; object-fit: cover;
+            filter: grayscale(30%) brightness(0.6);
+            transition: all 0.6s ease;
+        }
+        .toppick-card:hover img { filter: grayscale(0%) brightness(0.5); transform: scale(1.03); }
+        .toppick-overlay {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 30px;
+            background: linear-gradient(transparent, rgba(10,10,10,0.9));
+        }
+        .toppick-badge {
+            font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+            color: var(--accent); font-weight: 400; margin-bottom: 8px;
+        }
+        .toppick-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 26px; color: var(--off-white); font-weight: 300;
+            letter-spacing: 1px; margin-bottom: 4px;
+        }
+        .toppick-price { font-size: 16px; color: var(--light-gray); font-weight: 300; }
+
+        /* ===== SUPPORT CHAT ===== */
+        .chat-toggle {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--card);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            font-size: 18px;
+            cursor: pointer;
+            z-index: 9980;
+            transition: all 0.4s ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+        .chat-toggle.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .chat-toggle:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 4px 20px rgba(201,169,110,0.15);
+        }
+        .chat-toggle.has-dot::after {
+            content: '';
+            position: absolute;
+            top: 2px; right: 2px;
+            width: 8px; height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+        .chat-window {
+            position: fixed;
+            bottom: 90px;
+            left: 30px;
+            width: 340px;
+            max-height: 460px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            z-index: 9985;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            overflow: hidden;
+        }
+        .chat-window.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+        .chat-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .chat-header-avatar {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            background: rgba(201,169,110,0.1);
+            border: 1px solid var(--accent);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--accent); font-size: 13px;
+        }
+        .chat-header-info { flex: 1; }
+        .chat-header-name { font-size: 13px; color: var(--off-white); font-weight: 400; letter-spacing: 0.5px; }
+        .chat-header-status { font-size: 10px; color: #27ae60; letter-spacing: 1px; font-weight: 300; }
+        .chat-close {
+            background: none; border: none; color: var(--gray);
+            font-size: 16px; cursor: pointer; transition: color 0.3s ease; padding: 0;
+        }
+        .chat-close:hover { color: var(--off-white); }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 20px;
+            max-height: 300px;
+        }
+        .chat-messages::-webkit-scrollbar { width: 3px; }
+        .chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+        .chat-msg {
+            margin-bottom: 12px;
+            max-width: 85%;
+            animation: chatMsgIn 0.3s ease;
+        }
+        @keyframes chatMsgIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .chat-msg.bot { margin-right: auto; }
+        .chat-msg.user { margin-left: auto; }
+        .chat-bubble {
+            font-size: 13px; font-weight: 300;
+            letter-spacing: 0.3px; line-height: 1.6;
+            padding: 10px 14px;
+            border-radius: 12px;
+        }
+        .chat-msg.bot .chat-bubble {
+            background: rgba(201,169,110,0.08);
+            border: 1px solid rgba(201,169,110,0.15);
+            color: var(--light-gray);
+            border-bottom-left-radius: 4px;
+        }
+        .chat-msg.user .chat-bubble {
+            background: var(--accent);
+            color: var(--black);
+            border-bottom-right-radius: 4px;
+            font-weight: 400;
+        }
+        .chat-time {
+            font-size: 9px; color: var(--gray); font-weight: 200;
+            margin-top: 4px; letter-spacing: 0.5px;
+        }
+        .chat-msg.user .chat-time { text-align: right; }
+        .chat-input-area {
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .chat-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--off-white);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+            outline: none;
+        }
+        .chat-input::placeholder { color: var(--gray); font-weight: 200; }
+        .chat-send {
+            background: none; border: none;
+            color: var(--accent); font-size: 16px;
+            cursor: pointer; transition: all 0.3s ease;
+            padding: 4px;
+        }
+        .chat-send:hover { transform: scale(1.15); }
+        .chat-send:disabled { color: var(--border); cursor: default; transform: none; }
+        @media (max-width: 576px) {
+            .chat-window { width: calc(100vw - 60px); left: 30px; }
+        }
+
+        /* ===== PARTICLES CANVAS ===== */
+        #particlesCanvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* ===== LOOKBOOK ===== */
+        .lookbook-section {
+            position: relative;
+            height: 70vh;
+            min-height: 500px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+        .lookbook-bg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: url('https://images.unsplash.com/photo-1509631174183-56a0793e4c75?w=1600&h=900&fit=crop') center/cover no-repeat;
+            filter: grayscale(50%);
+            will-change: transform;
+        }
+        .lookbook-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(to right, rgba(10,10,10,0.85) 40%, rgba(10,10,10,0.3));
+            z-index: 1;
+        }
+        .lookbook-content {
+            position: relative;
+            z-index: 2;
+            max-width: 500px;
+            padding-left: 8%;
+        }
+        .lookbook-edition {
+            font-size: 10px;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+        .lookbook-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 52px;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--off-white);
+            line-height: 1.1;
+            margin-bottom: 24px;
+        }
+        .lookbook-text {
+            color: var(--gray);
+            font-size: 14px;
+            font-weight: 200;
+            line-height: 1.8;
+            margin-bottom: 36px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== PRODUCT FILTER ===== */
+        .product-filter-bar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--gray);
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 8px 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border-radius: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+        .filter-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(201, 169, 110, 0.08), transparent);
+            transition: left 0.5s ease;
+        }
+        .filter-btn:hover::before {
+            left: 100%;
+        }
+        .filter-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(201, 169, 110, 0.15);
+        }
+        .filter-btn.active {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(201, 169, 110, 0.08);
+        }
+        .filter-btn:active {
+            transform: translateY(0) scale(0.97);
+        }
+        .filter-select {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--light-gray);
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            padding: 8px 16px;
+            border-radius: 2px;
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            outline: none;
+        }
+        .filter-select option {
+            background: var(--card);
+            color: var(--off-white);
+        }
+        .filter-select:focus {
+            border-color: var(--accent);
+        }
+        .product-col-hidden {
+            display: none !important;
+        }
+
+        /* ===== SIZE GUIDE MODAL ===== */
+        .size-guide-content {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 40px;
+        }
+        .size-guide-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--off-white);
+            margin-bottom: 8px;
+        }
+        .size-guide-subtitle {
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 30px;
+        }
+        .size-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .size-table th {
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 400;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+        .size-table td {
+            font-size: 13px;
+            font-weight: 300;
+            color: var(--light-gray);
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(34,34,34,0.5);
+            letter-spacing: 0.5px;
+        }
+        .size-table tr:hover td {
+            color: var(--off-white);
+            background: rgba(201,169,110,0.05);
+        }
+        .size-guide-note {
+            margin-top: 24px;
+            color: var(--gray);
+            font-size: 12px;
+            font-weight: 200;
+            line-height: 1.7;
+        }
+        .size-guide-link {
+            color: var(--accent);
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(201,169,110,0.3);
+            transition: border-color 0.3s ease;
+        }
+        .size-guide-link:hover {
+            border-color: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .lookbook-title { font-size: 36px; }
+            .lookbook-content { max-width: 90%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Прелоадер -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-brand">NOIR</div>
+        <div class="preloader-line"></div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <!-- Scroll Progress -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Навигационная панель -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-noir fixed-top">
+        <div class="container">
+            <a href="#" class="brand-noir">NOIR</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Shop</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Collections</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </ul>
+                <div class="nav-icons">
+                    <a href="#" class="nav-icon-link"><i class="fas fa-search"></i></a>
+                    <a href="account.html" class="nav-icon-link"><i class="far fa-user"></i></a>
+                    <a href="#" class="nav-icon-link" data-toggle="modal" data-target="#cartModal">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero секция -->
+    <section class="hero-section" id="heroSection">
+        <div class="hero-bg" id="heroBg"></div>
+        <video class="hero-video" id="heroVideo" autoplay muted loop playsinline>
+            <source src="videos/Dark_luxury_fashion_film_for_a_brand_called__NOIR_.__Cinematic,_slow,_minimal,_atmospheric.____A_tal_seed3241003940.mp4" type="video/mp4">
+        </video>
+        <canvas id="particlesCanvas"></canvas>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-label">Autumn / Winter 2026</div>
+            <h1 class="hero-title">Silence<br>is Luxury</h1>
+            <p class="hero-subtitle">Новая коллекция уже доступна</p>
+            <a href="#" class="btn-noir">Смотреть коллекцию</a>
+        </div>
+    </section>
+
+    <!-- Бегущая строка брендов -->
+    <section class="brands-section">
+        <div class="container-fluid">
+            <div class="brands-track">
+                <span class="brand-name">Balenciaga</span>
+                <span class="brand-name">ERD</span>
+                <span class="brand-name">Rick Owens</span>
+                <span class="brand-name">Maison Margiela</span>
+                <span class="brand-name">Comme des Garçons</span>
+                <span class="brand-name">Yohji Yamamoto</span>
+                <span class="brand-name">Undercover</span>
+                <span class="brand-name">Acne Studios</span>
+                <span class="brand-name">Balenciaga</span>
+                <span class="brand-name">ERD</span>
+                <span class="brand-name">Rick Owens</span>
+                <span class="brand-name">Maison Margiela</span>
+                <span class="brand-name">Comme des Garçons</span>
+                <span class="brand-name">Yohji Yamamoto</span>
+                <span class="brand-name">Undercover</span>
+                <span class="brand-name">Acne Studios</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Поиск с автозаполнением -->
+    <section class="search-section">
+        <div class="container">
+            <div class="search-wrapper">
+                <input type="text" class="form-control search-input" id="searchInput" placeholder="Поиск по бренду, категории или товару...">
+                <button class="search-icon" type="button"><i class="fas fa-search"></i></button>
+                <div id="autocompleteResults" class="list-group" style="display: none;"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Слайдер новых коллекций -->
+    <section class="carousel-section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <div class="section-label">Featured</div>
+                <h2 class="section-title">Новые коллекции</h2>
+                <div class="section-line"></div>
+            </div>
+            <div id="collectionCarousel" class="carousel slide carousel-noir" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#collectionCarousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#collectionCarousel" data-slide-to="1"></li>
+                    <li data-target="#collectionCarousel" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=1200&h=550&fit=crop" alt="Balenciaga">
+                        <div class="carousel-caption">
+                            <h5>Balenciaga FW26</h5>
+                            <p>Деконструкция формы</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=1200&h=550&fit=crop" alt="ERD">
+                        <div class="carousel-caption">
+                            <h5>ERD Collection</h5>
+                            <p>Тьма как эстетика</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=1200&h=550&fit=crop" alt="Rick Owens">
+                        <div class="carousel-caption">
+                            <h5>Rick Owens</h5>
+                            <p>Гланж на грани</p>
+                        </div>
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#collectionCarousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#collectionCarousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Три колонки категорий (Bootstrap Grid) -->
+    <section class="categories-section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <div class="section-label">Categories</div>
+                <h2 class="section-title">Категории</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="row">
+                <div class="col-sm fade-in">
+                    <a href="category.html?cat=outerwear" style="text-decoration:none;">
+                    <div class="category-card">
+                        <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500&h=600&fit=crop" alt="Outerwear">
+                        <div class="category-content">
+                            <h3>Верхняя одежда</h3>
+                            <span>12 товаров →</span>
+                        </div>
+                    </div>
+                    </a>
+                </div>
+                <div class="col-sm fade-in">
+                    <a href="category.html?cat=knitwear" style="text-decoration:none;">
+                    <div class="category-card">
+                        <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=500&h=600&fit=crop" alt="Knitwear">
+                        <div class="category-content">
+                            <h3>Трикотаж</h3>
+                            <span>8 товаров →</span>
+                        </div>
+                    </div>
+                    </a>
+                </div>
+                <div class="col-sm fade-in">
+                    <a href="category.html?cat=accessories" style="text-decoration:none;">
+                    <div class="category-card">
+                        <img src="https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=500&h=600&fit=crop" alt="Accessories">
+                        <div class="category-content">
+                            <h3>Аксессуары</h3>
+                            <span>15 товаров →</span>
+                        </div>
+                    </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lookbook -->
+    <section class="lookbook-section fade-in">
+        <div class="lookbook-bg"></div>
+        <div class="lookbook-overlay"></div>
+        <div class="lookbook-content">
+            <div class="lookbook-edition">Editorial №07</div>
+            <h2 class="lookbook-title">Dark<br>Elegance</h2>
+            <p class="lookbook-text">Авангардная эстетика в каждой детали. От деконструкции до минимализма — коллекция, где тишина говорит громче слов.</p>
+            <a href="#" class="btn-noir btn-accent">Смотреть lookbook</a>
+        </div>
+    </section>
+
+    <!-- Философия бренда (Parallax) -->
+    <section class="philosophy-section fade-in">
+        <div class="philosophy-bg" id="philosophyBg"></div>
+        <div class="philosophy-overlay"></div>
+        <div class="philosophy-content">
+            <div class="philosophy-label">Philosophy</div>
+            <div class="philosophy-quote">«Мода — это не про одежду. Это про молчание, которое громче слов. Про пустоту, которая дороже заполненности.»</div>
+            <div class="philosophy-divider"></div>
+            <div class="philosophy-author">NOIR Manifesto</div>
+        </div>
+    </section>
+
+    <!-- Тренды недели (Horizontal Scroll) -->
+    <section class="trends-section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <div class="section-label">Trending</div>
+                <h2 class="section-title">Тренды недели</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="trends-scroll-wrapper fade-in">
+                <div class="trends-track" id="trendsTrack">
+                    <div class="trend-card">
+                        <div class="trend-card-img"><img src="photo/balenci.jpg" alt=""></div>
+                        <div class="trend-card-body"><div class="trend-card-brand">Balenciaga</div><div class="trend-card-name">Oversized Leather Jacket</div><div class="trend-card-price">€3,200</div></div>
+                    </div>
+                    <div class="trend-card">
+                        <div class="trend-card-img"><img src="photo/31156069_60491599_600.webp" alt=""></div>
+                        <div class="trend-card-body"><div class="trend-card-brand">Maison Margiela</div><div class="trend-card-name">Tabi Boots Leather</div><div class="trend-card-price">€1,590</div></div>
+                    </div>
+                    <div class="trend-card">
+                        <div class="trend-card-img"><img src="photo/Enfants Riches Déprimés байкерская куртка на молнии.webp" alt=""></div>
+                        <div class="trend-card-body"><div class="trend-card-brand">ERD</div><div class="trend-card-name">Biker Jacket</div><div class="trend-card-price">€2,450</div></div>
+                    </div>
+                    <div class="trend-card">
+                        <div class="trend-card-img"><img src="photo/images 2.jpeg" alt=""></div>
+                        <div class="trend-card-body"><div class="trend-card-brand">Rick Owens</div><div class="trend-card-name">DRKSHDW Cargo Pants</div><div class="trend-card-price">€1,260</div></div>
+                    </div>
+                    <div class="trend-card">
+                        <div class="trend-card-img"><img src="photo/Balenciaga кроссовки Track.webp" alt=""></div>
+                        <div class="trend-card-body"><div class="trend-card-brand">Balenciaga</div><div class="trend-card-name">Track Sneakers</div><div class="trend-card-price">€950</div></div>
+                    </div>
+                    <div class="trend-card">
+                        <div class="trend-card-img"><img src="photo/Enfants Riches Déprimés худи с эффектом потертости.webp" alt=""></div>
+                        <div class="trend-card-body"><div class="trend-card-brand">ERD</div><div class="trend-card-name">Distressed Hoodie</div><div class="trend-card-price">€1,150</div></div>
+                    </div>
+                    <div class="trend-card">
+                        <div class="trend-card-img"><img src="photo/Enfants Riches Déprimés свитер Come Live With Me с графичным принтом.webp" alt=""></div>
+                        <div class="trend-card-body"><div class="trend-card-brand">ERD</div><div class="trend-card-name">Come Live With Me Sweater</div><div class="trend-card-price">€1,350</div></div>
+                    </div>
+                    <div class="trend-card">
+                        <div class="trend-card-img"><img src="photo/come des garcons.jpeg" alt=""></div>
+                        <div class="trend-card-body"><div class="trend-card-brand">Comme des Garçons</div><div class="trend-card-name">Play Heart Hoodie</div><div class="trend-card-price">€680</div></div>
+                    </div>
+                </div>
+                <div class="trend-nav">
+                    <button class="trend-nav-btn" id="trendPrev"><i class="fas fa-chevron-left"></i></button>
+                    <button class="trend-nav-btn" id="trendNext"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Top Picks / Бестселлеры -->
+    <section class="toppicks-section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <div class="section-label">Bestsellers</div>
+                <h2 class="section-title">Top Picks</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="toppicks-grid fade-in">
+                <div class="toppick-card">
+                    <img src="photo/balenci.jpg" alt="">
+                    <div class="toppick-overlay">
+                        <div class="toppick-badge">#1 Бестселлер</div>
+                        <div class="toppick-name">Oversized Leather Jacket</div>
+                        <div class="toppick-price">€3,200</div>
+                    </div>
+                </div>
+                <div class="toppick-card">
+                    <img src="photo/31156069_60491599_600.webp" alt="">
+                    <div class="toppick-overlay">
+                        <div class="toppick-badge">#2 Бестселлер</div>
+                        <div class="toppick-name">Tabi Boots Leather</div>
+                        <div class="toppick-price">€1,590</div>
+                    </div>
+                </div>
+                <div class="toppick-card">
+                    <img src="photo/Enfants Riches Déprimés байкерская куртка на молнии.webp" alt="">
+                    <div class="toppick-overlay">
+                        <div class="toppick-badge">#3 Бестселлер</div>
+                        <div class="toppick-name">Biker Jacket</div>
+                        <div class="toppick-price">€2,450</div>
+                    </div>
+                </div>
+                <div class="toppick-card">
+                    <img src="photo/images 2.jpeg" alt="">
+                    <div class="toppick-overlay">
+                        <div class="toppick-badge">#4 Бестселлер</div>
+                        <div class="toppick-name">DRKSHDW Cargo Pants</div>
+                        <div class="toppick-price">€1,260</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Товары -->
+    <section class="products-section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <div class="section-label">New Arrivals</div>
+                <h2 class="section-title">Новые поступления</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="product-filter-bar fade-in">
+                <button class="filter-btn active" data-filter="all">Все</button>
+                <button class="filter-btn" data-filter="Balenciaga">Balenciaga</button>
+                <button class="filter-btn" data-filter="ERD">ERD</button>
+                <button class="filter-btn" data-filter="Rick Owens">Rick Owens</button>
+                <button class="filter-btn" data-filter="Maison Margiela">Margiela</button>
+                <button class="filter-btn" data-filter="Comme des Garçons">CdG</button>
+                <button class="filter-btn" data-filter="Yohji Yamamoto">Yamamoto</button>
+                <button class="filter-btn" data-filter="Undercover">Undercover</button>
+                <button class="filter-btn" data-filter="Acne Studios">Acne</button>
+                <select class="filter-select" id="priceFilter">
+                    <option value="all">Цена</option>
+                    <option value="0-500">до €500</option>
+                    <option value="500-1500">€500 — €1,500</option>
+                    <option value="1500-3000">€1,500 — €3,000</option>
+                    <option value="3000-99999">от €3,000</option>
+                </select>
+                <a class="size-guide-link" data-toggle="modal" data-target="#sizeGuideModal">Size Guide</a>
+            </div>
+            <div class="row" id="productsGrid">
+                <div class="col-lg-3 col-md-6 fade-in">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="photo/balenci.jpg" alt="Product">
+                            <span class="product-badge badge-new">New</span>
+                            <div class="product-wishlist"><i class="far fa-heart"></i></div>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-brand">Balenciaga</div>
+                            <div class="product-name">Oversized Leather Jacket</div>
+                            <div class="product-price">€3,200</div>
+                            <div class="product-sizes">
+                                <span class="size-option">S</span>
+                                <span class="size-option">M</span>
+                                <span class="size-option">L</span>
+                                <span class="size-option">XL</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 fade-in">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="photo/images.jpeg" alt="Product">
+                            <span class="product-badge badge-new">New</span>
+                            <div class="product-wishlist"><i class="far fa-heart"></i></div>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-brand">ERD</div>
+                            <div class="product-name">Distressed Knit Sweater</div>
+                            <div class="product-price">€1,450</div>
+                            <div class="product-sizes">
+                                <span class="size-option">S</span>
+                                <span class="size-option">M</span>
+                                <span class="size-option">L</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 fade-in">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="photo/images 2.jpeg" alt="Product">
+                            <span class="product-badge badge-sale">-30%</span>
+                            <div class="product-wishlist"><i class="far fa-heart"></i></div>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-brand">Rick Owens</div>
+                            <div class="product-name">DRKSHDW Cargo Pants</div>
+                            <div class="product-price"><span class="old-price">€1,800</span>€1,260</div>
+                            <div class="product-sizes">
+                                <span class="size-option">S</span>
+                                <span class="size-option">M</span>
+                                <span class="size-option">L</span>
+                                <span class="size-option">XL</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 fade-in">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="photo/31156069_60491599_600.webp" alt="Product">
+                            <span class="product-badge badge-new">New</span>
+                            <div class="product-wishlist"><i class="far fa-heart"></i></div>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-brand">Maison Margiela</div>
+                            <div class="product-name">Tabi Boots Leather</div>
+                            <div class="product-price">€1,590</div>
+                            <div class="product-sizes">
+                                <span class="size-option">38</span>
+                                <span class="size-option">40</span>
+                                <span class="size-option">42</span>
+                                <span class="size-option">44</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row hidden-products" id="hiddenProducts">
+                <div class="col-lg-3 col-md-6 fade-in">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="photo/come des garcons.jpeg" alt="Product">
+                            <div class="product-wishlist"><i class="far fa-heart"></i></div>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-brand">Comme des Garçons</div>
+                            <div class="product-name">Play Heart Hoodie</div>
+                            <div class="product-price">€680</div>
+                            <div class="product-sizes">
+                                <span class="size-option">S</span>
+                                <span class="size-option">M</span>
+                                <span class="size-option">L</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 fade-in">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="photo/yohji yamamoto.webp" alt="Product">
+                            <span class="product-badge badge-sold-out">Sold out</span>
+                            <div class="product-wishlist"><i class="far fa-heart"></i></div>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-brand">Yohji Yamamoto</div>
+                            <div class="product-name">Asymmetric Coat</div>
+                            <div class="product-price">€4,500</div>
+                            <div class="product-sizes">
+                                <span class="size-option">S</span>
+                                <span class="size-option">M</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 fade-in">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="photo/undercover.jpeg" alt="Product">
+                            <span class="product-badge badge-new">New</span>
+                            <div class="product-wishlist"><i class="far fa-heart"></i></div>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-brand">Undercover</div>
+                            <div class="product-name">Scab Graphic Tee</div>
+                            <div class="product-price">€420</div>
+                            <div class="product-sizes">
+                                <span class="size-option">S</span>
+                                <span class="size-option">M</span>
+                                <span class="size-option">L</span>
+                                <span class="size-option">XL</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 fade-in">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="photo/ACNE STUDIOS Face Patch Beanie.webp" alt="Product">
+                            <span class="product-badge badge-sale">-20%</span>
+                            <div class="product-wishlist"><i class="far fa-heart"></i></div>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-brand">Acne Studios</div>
+                            <div class="product-name">Face Patch Beanie</div>
+                            <div class="product-price"><span class="old-price">€250</span>€200</div>
+                            <div class="product-sizes">
+                                <span class="size-option">ONE</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row hidden-products">
+                <div class="col-lg-3 col-md-6 fade-in">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="photo/pocket cargo paints.webp" alt="Product">
+                            <span class="product-badge badge-new">New</span>
+                            <div class="product-wishlist"><i class="far fa-heart"></i></div>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-brand">Maison Margiela</div>
+                            <div class="product-name">Pocket Cargo Pants</div>
+                            <div class="product-price">€890</div>
+                            <div class="product-sizes">
+                                <span class="size-option">S</span>
+                                <span class="size-option">M</span>
+                                <span class="size-option">L</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 fade-in">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="photo/maison margiela logo print t shirt.jpeg" alt="Product">
+                            <span class="product-badge badge-new">New</span>
+                            <div class="product-wishlist"><i class="far fa-heart"></i></div>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-brand">Maison Margiela</div>
+                            <div class="product-name">Logo Print T-Shirt</div>
+                            <div class="product-price">€420</div>
+                            <div class="product-sizes">
+                                <span class="size-option">S</span>
+                                <span class="size-option">M</span>
+                                <span class="size-option">L</span>
+                                <span class="size-option">XL</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 fade-in">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="photo/Balenciaga кроссовки 3XL с сетчатыми вставками.webp" alt="Product">
+                            <span class="product-badge badge-new">New</span>
+                            <div class="product-wishlist"><i class="far fa-heart"></i></div>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-brand">Balenciaga</div>
+                            <div class="product-name">3XL Sneakers</div>
+                            <div class="product-price">€1,150</div>
+                            <div class="product-sizes">
+                                <span class="size-option">40</span>
+                                <span class="size-option">42</span>
+                                <span class="size-option">44</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 fade-in">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="photo/Balenciaga кроссовки Track.webp" alt="Product">
+                            <span class="product-badge badge-sale">-15%</span>
+                            <div class="product-wishlist"><i class="far fa-heart"></i></div>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-brand">Balenciaga</div>
+                            <div class="product-name">Track Sneakers</div>
+                            <div class="product-price"><span class="old-price">€895</span>€760</div>
+                            <div class="product-sizes">
+                                <span class="size-option">40</span>
+                                <span class="size-option">42</span>
+                                <span class="size-option">44</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row hidden-products">
+                <div class="col-lg-3 col-md-6 fade-in">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="photo/Balenciaga ремень с логотипом BB.webp" alt="Product">
+                            <span class="product-badge badge-new">New</span>
+                            <div class="product-wishlist"><i class="far fa-heart"></i></div>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-brand">Balenciaga</div>
+                            <div class="product-name">BB Logo Belt</div>
+                            <div class="product-price">€450</div>
+                            <div class="product-sizes">
+                                <span class="size-option">S</span>
+                                <span class="size-option">M</span>
+                                <span class="size-option">L</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 fade-in">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="photo/Balenciaga футболка Messy Spray с логотипом.webp" alt="Product">
+                            <span class="product-badge badge-new">New</span>
+                            <div class="product-wishlist"><i class="far fa-heart"></i></div>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-brand">Balenciaga</div>
+                            <div class="product-name">Messy Spray T-Shirt</div>
+                            <div class="product-price">€590</div>
+                            <div class="product-sizes">
+                                <span class="size-option">S</span>
+                                <span class="size-option">M</span>
+                                <span class="size-option">L</span>
+                                <span class="size-option">XL</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 fade-in">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="photo/Enfants Riches Déprimés байкерская куртка на молнии.webp" alt="Product">
+                            <span class="product-badge badge-new">New</span>
+                            <div class="product-wishlist"><i class="far fa-heart"></i></div>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-brand">ERD</div>
+                            <div class="product-name">Biker Jacket</div>
+                            <div class="product-price">€2,450</div>
+                            <div class="product-sizes">
+                                <span class="size-option">S</span>
+                                <span class="size-option">M</span>
+                                <span class="size-option">L</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 fade-in">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="photo/Enfants Riches Déprimés бейсболка Tulsa с вышивкой.webp" alt="Product">
+                            <span class="product-badge badge-new">New</span>
+                            <div class="product-wishlist"><i class="far fa-heart"></i></div>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-brand">ERD</div>
+                            <div class="product-name">Tulsa Embroidered Cap</div>
+                            <div class="product-price">€320</div>
+                            <div class="product-sizes">
+                                <span class="size-option">ONE</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row hidden-products">
+                <div class="col-lg-3 col-md-6 fade-in">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="photo/Enfants Riches Déprimés ремень для монет Dog In Restraint.webp" alt="Product">
+                            <span class="product-badge badge-new">New</span>
+                            <div class="product-wishlist"><i class="far fa-heart"></i></div>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-brand">ERD</div>
+                            <div class="product-name">Dog In Restraint Coin Belt</div>
+                            <div class="product-price">€280</div>
+                            <div class="product-sizes">
+                                <span class="size-option">ONE</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 fade-in">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="photo/Enfants Riches Déprimés свитер Come Live With Me с графичным принтом.webp" alt="Product">
+                            <span class="product-badge badge-new">New</span>
+                            <div class="product-wishlist"><i class="far fa-heart"></i></div>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-brand">ERD</div>
+                            <div class="product-name">Come Live With Me Sweater</div>
+                            <div class="product-price">€1,380</div>
+                            <div class="product-sizes">
+                                <span class="size-option">S</span>
+                                <span class="size-option">M</span>
+                                <span class="size-option">L</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 fade-in">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="photo/Enfants Riches Déprimés спортивные брюки с эффектом потертости.webp" alt="Product">
+                            <span class="product-badge badge-new">New</span>
+                            <div class="product-wishlist"><i class="far fa-heart"></i></div>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-brand">ERD</div>
+                            <div class="product-name">Distressed Sweatpants</div>
+                            <div class="product-price">€890</div>
+                            <div class="product-sizes">
+                                <span class="size-option">S</span>
+                                <span class="size-option">M</span>
+                                <span class="size-option">L</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 fade-in">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="photo/Enfants Riches Déprimés футболка Anton:Hopper Assemblage с рукавами реглан.webp" alt="Product">
+                            <span class="product-badge badge-new">New</span>
+                            <div class="product-wishlist"><i class="far fa-heart"></i></div>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-brand">ERD</div>
+                            <div class="product-name">Anton:Hopper Raglan Tee</div>
+                            <div class="product-price">€520</div>
+                            <div class="product-sizes">
+                                <span class="size-option">S</span>
+                                <span class="size-option">M</span>
+                                <span class="size-option">L</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="load-more-btn" id="loadMoreBtn">Посмотреть больше</button>
+            <div class="row hidden-products">
+                <div class="col-lg-3 col-md-6 fade-in">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="photo/Enfants Riches Déprimés худи с эффектом потертости.webp" alt="Product">
+                            <span class="product-badge badge-new">New</span>
+                            <div class="product-wishlist"><i class="far fa-heart"></i></div>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-brand">ERD</div>
+                            <div class="product-name">Distressed Hoodie</div>
+                            <div class="product-price">€1,150</div>
+                            <div class="product-sizes">
+                                <span class="size-option">S</span>
+                                <span class="size-option">M</span>
+                                <span class="size-option">L</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Видео-шоукейс -->
+    <section class="video-showcase-section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <div class="section-label">Cinematic</div>
+                <h2 class="section-title">За кулисами</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="video-grid fade-in">
+                <div class="video-card featured" data-video="featured">
+                    <video muted loop playsinline preload="metadata">
+                        <source src="videos/Dark_luxury_fashion_film_for_a_brand_called__NOIR_.__Cinematic,_slow,_minimal,_atmospheric.____A_tal_seed2165612236.mp4" type="video/mp4">
+                    </video>
+                    <div class="video-play-icon"><i class="fas fa-play" style="margin-left:3px"></i></div>
+                    <div class="video-card-info">
+                        <div class="video-card-label">Fashion Film</div>
+                        <div class="video-card-title">NOIR — Essence</div>
+                    </div>
+                </div>
+                <div class="video-card" data-video="small1">
+                    <video muted loop playsinline preload="metadata">
+                        <source src="videos/Dark_luxury_fashion_film_for_a_brand_called__NOIR_.__Cinematic,_slow,_minimal,_atmospheric.____A_tal_seed3241003940.mp4" type="video/mp4">
+                    </video>
+                    <div class="video-play-icon"><i class="fas fa-play" style="margin-left:2px"></i></div>
+                    <div class="video-card-info">
+                        <div class="video-card-label">Campaign</div>
+                        <div class="video-card-title">AW26 Lookbook</div>
+                    </div>
+                </div>
+                <div class="video-card" data-video="small2">
+                    <video muted loop playsinline preload="metadata">
+                        <source src="videos/A_cinematic_close-up_of_a_modern_black_smartphone_held_in_one_hand_in_a_dark_environment._On_the_scr_seed1042780927.mp4" type="video/mp4">
+                    </video>
+                    <div class="video-play-icon"><i class="fas fa-play" style="margin-left:2px"></i></div>
+                    <div class="video-card-info">
+                        <div class="video-card-label">Product</div>
+                        <div class="video-card-title">Digital Experience</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Countdown до дропа -->
+    <section class="countdown-section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <div class="section-label">Next Drop</div>
+                <h2 class="section-title">Следующий релиз</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="countdown-wrapper fade-in">
+                <div class="countdown-item">
+                    <div class="countdown-number" id="cdDays">00</div>
+                    <div class="countdown-label">Дней</div>
+                </div>
+                <div class="countdown-separator">:</div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="cdHours">00</div>
+                    <div class="countdown-label">Часов</div>
+                </div>
+                <div class="countdown-separator">:</div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="cdMinutes">00</div>
+                    <div class="countdown-label">Минут</div>
+                </div>
+                <div class="countdown-separator">:</div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="cdSeconds">00</div>
+                    <div class="countdown-label">Секунд</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Календарь дропов -->
+    <section class="calendar-section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <div class="section-label">Upcoming</div>
+                <h2 class="section-title">Календарь дропов</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="calendar-wrapper fade-in">
+                <label><i class="far fa-calendar-alt mr-2"></i>Выберите дату</label>
+                <input type="text" class="form-control datepicker-input" id="datepicker" placeholder="Дата выхода коллекции">
+            </div>
+        </div>
+    </section>
+
+    <!-- Счётчики -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-6 fade-in">
+                    <div class="stat-item">
+                        <div class="stat-number" data-target="10000">0</div>
+                        <div class="stat-label">Клиентов</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6 fade-in">
+                    <div class="stat-item">
+                        <div class="stat-number" data-target="50">0</div>
+                        <div class="stat-label">Брендов</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6 fade-in">
+                    <div class="stat-item">
+                        <div class="stat-number" data-target="2000">0</div>
+                        <div class="stat-label">Товаров</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6 fade-in">
+                    <div class="stat-item">
+                        <div class="stat-number" data-target="35">0</div>
+                        <div class="stat-label">Стран доставки</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Instagram фид -->
+    <section class="instagram-section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <div class="section-label">@noir.store</div>
+                <h2 class="section-title">Instagram</h2>
+                <div class="section-line"></div>
+            </div>
+        </div>
+        <div class="insta-grid">
+            <div class="insta-item fade-in">
+                <img src="https://images.unsplash.com/photo-1558618666-fcd25c7cd782?w=400&h=400&fit=crop" alt="Instagram">
+                <div class="insta-icon"><i class="fab fa-instagram"></i></div>
+            </div>
+            <div class="insta-item fade-in">
+                <img src="https://images.unsplash.com/photo-1509631174183-56a0793e4c75?w=400&h=400&fit=crop" alt="Instagram">
+                <div class="insta-icon"><i class="fab fa-instagram"></i></div>
+            </div>
+            <div class="insta-item fade-in">
+                <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=400&fit=crop" alt="Instagram">
+                <div class="insta-icon"><i class="fab fa-instagram"></i></div>
+            </div>
+            <div class="insta-item fade-in">
+                <img src="https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=400&h=400&fit=crop" alt="Instagram">
+                <div class="insta-icon"><i class="fab fa-instagram"></i></div>
+            </div>
+            <div class="insta-item fade-in">
+                <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=400&h=400&fit=crop" alt="Instagram">
+                <div class="insta-icon"><i class="fab fa-instagram"></i></div>
+            </div>
+            <div class="insta-item fade-in">
+                <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&h=400&fit=crop" alt="Instagram">
+                <div class="insta-icon"><i class="fab fa-instagram"></i></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Рассылка -->
+    <section class="newsletter-section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <div class="section-label">Stay Updated</div>
+                <h2 class="section-title">Подписка</h2>
+                <div class="section-line"></div>
+            </div>
+            <p style="color: var(--gray); font-weight: 200; margin-bottom: 40px; letter-spacing: 0.5px;">Получайте первыми информацию о новых дропах и эксклюзивных предложениях</p>
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <input type="email" class="form-control newsletter-input" id="newsletterEmail" placeholder="Ваш email">
+                </div>
+            </div>
+            <div class="mt-4">
+                <a href="#" class="btn-noir btn-accent" id="subscribeBtn">Подписаться</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Size Guide модалка -->
+    <div class="modal fade" id="sizeGuideModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="size-guide-content">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:var(--gray);opacity:1;font-size:24px;float:right;">&times;</button>
+                <div class="size-guide-title">Размерная сетка</div>
+                <div class="size-guide-subtitle">Верхняя одежда / Трикотаж</div>
+                <table class="size-table">
+                    <thead>
+                        <tr><th>Размер</th><th>Грудь (см)</th><th>Талия (см)</th><th>Бёдра (см)</th><th>Длина рукава (см)</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>XS</td><td>82–86</td><td>62–66</td><td>88–92</td><td>59</td></tr>
+                        <tr><td>S</td><td>86–90</td><td>66–70</td><td>92–96</td><td>60</td></tr>
+                        <tr><td>M</td><td>90–94</td><td>70–74</td><td>96–100</td><td>61</td></tr>
+                        <tr><td>L</td><td>94–98</td><td>74–78</td><td>100–104</td><td>62</td></tr>
+                        <tr><td>XL</td><td>98–102</td><td>78–82</td><td>104–108</td><td>63</td></tr>
+                    </tbody>
+                </table>
+                <div class="size-guide-subtitle" style="margin-top:30px;">Обувь</div>
+                <table class="size-table">
+                    <thead>
+                        <tr><th>EU</th><th>US Men</th><th>US Women</th><th>UK</th><th>Длина стопы (см)</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>38</td><td>5.5</td><td>7</td><td>5</td><td>24</td></tr>
+                        <tr><td>39</td><td>6.5</td><td>8</td><td>6</td><td>25</td></tr>
+                        <tr><td>40</td><td>7</td><td>8.5</td><td>6.5</td><td>25.5</td></tr>
+                        <tr><td>41</td><td>8</td><td>9.5</td><td>7.5</td><td>26.5</td></tr>
+                        <tr><td>42</td><td>8.5</td><td>10</td><td>8</td><td>27</td></tr>
+                        <tr><td>43</td><td>9.5</td><td>11</td><td>9</td><td>28</td></tr>
+                        <tr><td>44</td><td>10</td><td>11.5</td><td>9.5</td><td>28.5</td></tr>
+                    </tbody>
+                </table>
+                <div class="size-guide-note"><i class="fas fa-info-circle" style="color:var(--accent);margin-right:6px;"></i>Все замеры указаны для тела, а не изделия. Для лучшей посадки рекомендуем измерить себя и учесть желаемый oversize-эффект.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick View модалка -->
+    <div class="modal fade" id="quickViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="quick-view-content">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="position:absolute;top:16px;right:20px;z-index:10;color:var(--gray);opacity:1;font-size:24px;">&times;</button>
+                <div class="row no-gutters">
+                    <div class="col-md-6">
+                        <img class="quick-view-img" id="qvImg" src="" alt="Product">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="quick-view-body">
+                            <div class="quick-view-brand" id="qvBrand"></div>
+                            <div class="quick-view-name" id="qvName"></div>
+                            <div class="quick-view-price" id="qvPrice"></div>
+                            <div class="quick-view-desc" id="qvDesc"></div>
+                            <div class="quick-view-material" id="qvMaterial">
+                                <div class="quick-view-material-title">Состав</div>
+                                <ul class="quick-view-material-list" id="qvMaterialList"></ul>
+                            </div>
+                            <div class="quick-view-sizes" id="qvSizes"></div>
+                            <button class="btn-noir btn-accent" id="qvAddCart" style="width:100%;text-align:center;">В корзину</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно корзины -->
+    <div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" style="background: var(--card); border: 1px solid var(--border); border-radius: 4px;">
+                <div class="modal-header" style="border-bottom: 1px solid var(--border); padding: 24px 30px;">
+                    <h5 class="modal-title" id="cartModalLabel" style="font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 300; letter-spacing: 4px; text-transform: uppercase; color: var(--off-white);">Корзина</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: var(--gray); opacity: 1; font-size: 24px;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="cartItems" style="padding: 20px 30px; max-height: 400px; overflow-y: auto;">
+                    <p style="color: var(--gray); font-weight: 200; text-align: center; padding: 30px 0;">Корзина пуста</p>
+                </div>
+                <div class="modal-footer" style="border-top: 1px solid var(--border); padding: 20px 30px; justify-content: space-between;">
+                    <div>
+                        <span style="color: var(--gray); font-size: 12px; letter-spacing: 2px; text-transform: uppercase;">Итого:</span>
+                        <span id="cartTotal" style="color: var(--off-white); font-size: 18px; font-weight: 300; margin-left: 10px;">€0</span>
+                    </div>
+                    <button type="button" class="btn-noir btn-accent" id="checkoutBtn" style="padding: 12px 30px;">Оформить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast уведомления -->
+    <div id="toastContainer" style="position: fixed; bottom: 30px; right: 30px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;"></div>
+
+    <!-- Support Chat -->
+    <div class="chat-toggle" id="chatToggle"><i class="far fa-comment-dots"></i></div>
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <div class="chat-header-avatar"><i class="far fa-comment"></i></div>
+            <div class="chat-header-info">
+                <div class="chat-header-name">NOIR Support</div>
+                <div class="chat-header-status">● Онлайн</div>
+            </div>
+            <button class="chat-close" id="chatClose">&times;</button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-msg bot">
+                <div class="chat-bubble">Добрый вечер! Чем можем помочь?</div>
+                <div class="chat-time">только что</div>
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Напишите сообщение...">
+            <button class="chat-send" id="chatSend"><i class="fas fa-arrow-up"></i></button>
+        </div>
+    </div>
+
+    <!-- Back to Top -->
+    <div class="back-to-top" id="backToTop"><i class="fas fa-chevron-up"></i></div>
+
+    <!-- Футер -->
+    <footer class="footer-noir">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <div class="footer-brand">NOIR</div>
+                    <p class="footer-text">Кураторский магазин авангардной моды.<br>Отборные бренды, редкие позиции, мировой шиппинг.</p>
+                    <div class="social-links mt-4">
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-pinterest"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-telegram-plane"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4">
+                    <h6 class="footer-heading">Магазин</h6>
+                    <ul class="footer-links">
+                        <li><a href="#">Новинки</a></li>
+                        <li><a href="#">Бренды</a></li>
+                        <li><a href="#">Sale</a></li>
+                        <li><a href="#">Предзаказ</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4">
+                    <h6 class="footer-heading">Информация</h6>
+                    <ul class="footer-links">
+                        <li><a href="#">О нас</a></li>
+                        <li><a href="#">Доставка</a></li>
+                        <li><a href="#">Возврат</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4">
+                    <h6 class="footer-heading">Бренды</h6>
+                    <ul class="footer-links">
+                        <li><a href="#">Balenciaga</a></li>
+                        <li><a href="#">ERD</a></li>
+                        <li><a href="#">Rick Owens</a></li>
+                        <li><a href="#">Maison Margiela</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4">
+                    <h6 class="footer-heading">Контакт</h6>
+                    <ul class="footer-links">
+                        <li><a href="#">hello@noir.store</a></li>
+                        <li><a href="#">+7 (999) 000-00-00</a></li>
+                        <li><a href="#">Москва, ул. Столешников 7</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>&copy; 2026 NOIR. Все права защищены.</span>
+                <span>Дизайн — GEEKER</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap Datepicker JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script>
+        $(document).ready(function() {
+
+            // ===== Custom Cursor =====
+            const cursorDot = document.getElementById('cursorDot');
+            const cursorRing = document.getElementById('cursorRing');
+            let mouseX = 0, mouseY = 0;
+            let ringX = 0, ringY = 0;
+
+            if (window.matchMedia('(pointer: fine)').matches) {
+                document.addEventListener('mousemove', function(e) {
+                    mouseX = e.clientX;
+                    mouseY = e.clientY;
+                    cursorDot.style.left = mouseX + 'px';
+                    cursorDot.style.top = mouseY + 'px';
+                });
+
+                function animateRing() {
+                    ringX += (mouseX - ringX) * 0.15;
+                    ringY += (mouseY - ringY) * 0.15;
+                    cursorRing.style.left = ringX + 'px';
+                    cursorRing.style.top = ringY + 'px';
+                    requestAnimationFrame(animateRing);
+                }
+                animateRing();
+
+                const hoverTargets = 'a, button, .filter-btn, .size-option, .product-card, .product-wishlist, .add-to-cart-btn, .nav-link, .nav-icon-link, .social-link, .load-more-btn, .btn-noir, .carousel-control-prev, .carousel-control-next, .brand-name, .insta-item, .category-card';
+                $(document).on('mouseenter', hoverTargets, function() {
+                    cursorDot.classList.add('hover');
+                    cursorRing.classList.add('hover');
+                });
+                $(document).on('mouseleave', hoverTargets, function() {
+                    cursorDot.classList.remove('hover');
+                    cursorRing.classList.remove('hover');
+                });
+
+                document.addEventListener('mouseleave', function() {
+                    cursorDot.style.opacity = '0';
+                    cursorRing.style.opacity = '0';
+                });
+                document.addEventListener('mouseenter', function() {
+                    cursorDot.style.opacity = '1';
+                    cursorRing.style.opacity = '1';
+                });
+            } else {
+                cursorDot.style.display = 'none';
+                cursorRing.style.display = 'none';
+            }
+
+            // ===== Прелоадер =====
+            $(window).on('load', function() {
+                setTimeout(function() {
+                    $('#preloader').addClass('hidden');
+                }, 1200);
+            });
+            // Fallback: скрыть через 3 сек даже если load не сработал
+            setTimeout(function() {
+                $('#preloader').addClass('hidden');
+            }, 3000);
+
+            // ===== Scroll Progress =====
+            $(window).on('scroll', function() {
+                const scrollTop = $(this).scrollTop();
+                const docHeight = $(document).height() - $(window).height();
+                const progress = (scrollTop / docHeight) * 100;
+                $('#scrollProgress').css('width', progress + '%');
+            });
+
+            // ===== Countdown =====
+            const dropDate = new Date();
+            dropDate.setDate(dropDate.getDate() + 14);
+            dropDate.setHours(0, 0, 0, 0);
+
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const distance = dropDate.getTime() - now;
+
+                if (distance <= 0) {
+                    $('#cdDays, #cdHours, #cdMinutes, #cdSeconds').text('00');
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                $('#cdDays').text(String(days).padStart(2, '0'));
+                $('#cdHours').text(String(hours).padStart(2, '0'));
+                $('#cdMinutes').text(String(minutes).padStart(2, '0'));
+                $('#cdSeconds').text(String(seconds).padStart(2, '0'));
+            }
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+
+            // ===== Quick View =====
+            let qvData = {};
+
+            const productInfo = {
+                'Oversized Leather Jacket': {
+                    desc: 'Оверсайз куртка из мягкой телячьей кожи. Свободный крой, минималистичный дизайн с акцентом на фактуру материала.',
+                    materials: [['Кожа телячья', '100%'], ['Подкладка', 'Вискоза 100%'], ['Фурнитура', 'Латунь']]
+                },
+                'Distressed Knit Sweater': {
+                    desc: 'Вязаный свитер с эффектом состаренности. Ручная вязка, уникальная фактура каждого экземпляра.',
+                    materials: [['Шерсть меринос', '70%'], ['Кашемир', '20%'], ['Нейлон', '10%']]
+                },
+                'DRKSHDW Cargo Pants': {
+                    desc: 'Карго-брюки из драпированной ткани. Низкая посадка, объёмные карманы — фирменный силуэт DRKSHDW.',
+                    materials: [['Хлопок', '65%'], ['Полиэстер', '30%'], ['Эластан', '5%']]
+                },
+                'Tabi Boots Leather': {
+                    desc: 'Культовые ботинки Tabi из гладкой кожи. Разделённый носок, ручная прошивка, кожаная подошва.',
+                    materials: [['Кожа телячья', '100%'], ['Подкладка', 'Кожа ягнёнка'], ['Подошва', 'Кожа / резина']]
+                },
+                'Play Heart Hoodie': {
+                    desc: 'Худи с фирменным сердцем Play. Плотный трикотаж, кенгуровый карман, оверсайз-крой.',
+                    materials: [['Хлопок', '80%'], ['Полиэстер', '20%']]
+                },
+                'Asymmetric Coat': {
+                    desc: 'Асимметричное пальто длиной до колена. Деконструированный крой, драматичный силуэт.',
+                    materials: [['Шерсть', '85%'], ['Кашемир', '15%'], ['Подкладка', 'Шёлк']]
+                },
+                'Scab Graphic Tee': {
+                    desc: 'Футболка с графичным принтом Scab. Плотный хлопок, прямая посадка.',
+                    materials: [['Хлопок', '100%'], ['Принт', 'Сублимация']]
+                },
+                'Face Patch Beanie': {
+                    desc: 'Шапка-бини с фирменным нашивным патчем Face. Мягкий трикотаж, универсальный размер.',
+                    materials: [['Шерсть', '50%'], ['Акрил', '50%']]
+                },
+                'Pocket Cargo Pants': {
+                    desc: 'Карго-брюки с объёмными боковыми карманами. Свободный крой, застёжка на молнию и пуговицы.',
+                    materials: [['Хлопок', '98%'], ['Эластан', '2%']]
+                },
+                'Logo Print T-Shirt': {
+                    desc: 'Футболка с минималистичным логотипом Maison Margiela. Базовая посадка, мягкая фактура.',
+                    materials: [['Хлопок', '100%']]
+                },
+                '3XL Sneakers': {
+                    desc: 'Кроссовки 3XL с сетчатыми вставками. Массивная подошва, многослойный верх, инновационный дизайн.',
+                    materials: [['Верх', 'Мешковина / кожа'], ['Подошва', 'ЭВА / резина'], ['Подкладка', 'Текстиль']]
+                },
+                'Track Sneakers': {
+                    desc: 'Кроссовки Track — многослойная конструкция из 96 деталей. Спортивный силуэт в авангардном исполнении.',
+                    materials: [['Верх', 'Мешковина / нейлон'], ['Подошва', 'ЭВА / резина'], ['Подкладка', 'Текстиль']]
+                },
+                'BB Logo Belt': {
+                    desc: 'Ремень с логотипом BB. Регулируемая длина, матовая фурнитура, минималистичная пряжка.',
+                    materials: [['Кожа', '100%'], ['Пряжка', 'Латунь']]
+                },
+                'Messy Spray T-Shirt': {
+                    desc: 'Футболка с принтом Messy Spray. Графичный эффект распыления, прямой крой.',
+                    materials: [['Хлопок', '100%'], ['Принт', 'Сублимация']]
+                },
+                'Biker Jacket': {
+                    desc: 'Байкерская куртка на молнии. Потёртая кожа, асимметричная застёжка, рок-эстетика.',
+                    materials: [['Кожа ягнёнка', '100%'], ['Подкладка', 'Шёлк'], ['Фурнитура', 'Латунь']]
+                },
+                'Tulsa Embroidered Cap': {
+                    desc: 'Бейсболка Tulsa с вышивкой. Глубокий крой, регулируемый размер, состаренный эффект.',
+                    materials: [['Хлопок', '100%'], ['Вышивка', 'Полиэстер']]
+                },
+                'Dog In Restraint Coin Belt': {
+                    desc: 'Ремень для монет с мотивом Dog In Restraint. Металлические вставки, уникальный арт-объект.',
+                    materials: [['Кожа', '100%'], ['Металл', 'Латунь']]
+                },
+                'Come Live With Me Sweater': {
+                    desc: 'Свитер с графичным принтом Come Live With Me. Свободный крой, плотный трикотаж.',
+                    materials: [['Шерсть', '60%'], ['Кашемир', '25%'], ['Нейлон', '15%']]
+                },
+                'Distressed Sweatpants': {
+                    desc: 'Спортивные брюки с эффектом потёртости. Свободный крой, эластичный пояс, ручная обработка.',
+                    materials: [['Хлопок', '80%'], ['Полиэстер', '20%']]
+                },
+                'Anton:Hopper Raglan Tee': {
+                    desc: 'Футболка с рукавами реглан и принтом Anton:Hopper Assemblage. Арт-коллаборация, лимитированный выпуск.',
+                    materials: [['Хлопок', '100%'], ['Принт', 'Сублимация']]
+                },
+                'Distressed Hoodie': {
+                    desc: 'Худи с эффектом потёртости. Оверсайз-крой, капюшон на кулиске, ручная обработка каждого экземпляра.',
+                    materials: [['Хлопок', '80%'], ['Полиэстер', '20%']]
+                }
+            };
+
+            $(document).on('click', '.product-card', function(e) {
+                if ($(e.target).closest('.product-wishlist, .add-to-cart-btn, .size-option').length) return;
+
+                const card = $(this);
+                const img = card.find('.product-img img').attr('src');
+                const brand = card.find('.product-brand').text();
+                const name = card.find('.product-name').text();
+                const priceHtml = card.find('.product-price').html();
+                const priceText = card.find('.product-price').text().replace(/[^\d,]/g, '');
+                const price = parseFloat(priceText.replace(',', '.')) || 0;
+                const sizes = [];
+                card.find('.size-option').each(function() { sizes.push($(this).text()); });
+
+                qvData = { brand: brand, name: name, price: price };
+
+                $('#qvImg').attr('src', img);
+                $('#qvBrand').text(brand);
+                $('#qvName').text(name);
+                $('#qvPrice').html(priceHtml);
+
+                // Description & Materials
+                const info = productInfo[name] || { desc: 'Эксклюзивная модель из новой коллекции. Ручная работа, ограниченный тираж.', materials: [] };
+                $('#qvDesc').text(info.desc);
+                const materialList = $('#qvMaterialList');
+                materialList.empty();
+                if (info.materials.length > 0) {
+                    $('#qvMaterial').show();
+                    info.materials.forEach(function(m) {
+                        materialList.append('<li><span>' + m[0] + '</span><span>' + m[1] + '</span></li>');
+                    });
+                } else {
+                    $('#qvMaterial').hide();
+                }
+
+                const sizesContainer = $('#qvSizes');
+                sizesContainer.empty();
+                sizes.forEach(function(s) {
+                    sizesContainer.append('<span class="size-option">' + s + '</span>');
+                });
+
+                $('#quickViewModal').modal('show');
+            });
+
+            $(document).on('click', '#qvSizes .size-option', function() {
+                $(this).siblings('.size-option').removeClass('selected');
+                $(this).addClass('selected');
+            });
+
+            $(document).on('click', '#qvAddCart', function() {
+                const selectedSize = $('#qvSizes .size-option.selected');
+                if (selectedSize.length === 0) {
+                    showToast('Пожалуйста, выберите размер');
+                    return;
+                }
+                cart.push({ brand: qvData.brand, name: qvData.name, price: qvData.price, size: selectedSize.text() });
+                updateCartUI();
+                showToast(qvData.name + ' добавлен в корзину');
+                $('#quickViewModal').modal('hide');
+            });
+
+            // ===== Календарь =====
+            $('#datepicker').datepicker({
+                format: 'dd/mm/yyyy',
+                autoclose: true,
+                todayHighlight: true
+            });
+
+            // ===== Автозаполнение поиска =====
+            const catalog = [
+                'Balenciaga Oversized Jacket', 'Balenciaga Track Sneakers', 'Balenciaga Hourglass Bag',
+                'ERD Distressed Sweater', 'ERD Hoodie', 'ERD Cargo Pants',
+                'Rick Owens DRKSHDW Jacket', 'Rick Owens Ramones', 'Rick Owens GeoBasket',
+                'Maison Margiela Tabi Boots', 'Maison Margiela 5AC Bag', 'Maison Margiela Cardigan',
+                'Comme des Garçons Play Hoodie', 'Comme des Garçons Shirt', 'Comme des Garçons Wallet',
+                'Yohji Yamamoto Coat', 'Yohji Yamamoto Y-3', 'Undercover Scab Tee',
+                'Acne Studios Beanie', 'Acne Studios Blazer', 'Acne Studios Face Patch'
+            ];
+
+            $('#searchInput').on('input', function() {
+                const query = $(this).val().toLowerCase();
+                const results = $('#autocompleteResults');
+                results.empty();
+
+                if (query.length > 0) {
+                    const matches = catalog.filter(item => item.toLowerCase().includes(query));
+                    if (matches.length > 0) {
+                        results.show();
+                        matches.forEach(match => {
+                            results.append('<a href="#" class="list-group-item list-group-item-action">' + match + '</a>');
+                        });
+                    } else {
+                        results.hide();
+                    }
+                } else {
+                    results.hide();
+                }
+            });
+
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('#searchInput, #autocompleteResults').length) {
+                    $('#autocompleteResults').hide();
+                }
+            });
+
+            // ===== Иконка поиска — фокус на поле =====
+            $('.nav-icon-link:has(.fa-search)').on('click', function(e) {
+                e.preventDefault();
+                $('html, body').animate({ scrollTop: $('.search-section').offset().top - 80 }, 600);
+                $('#searchInput').focus();
+            });
+
+            // ===== Кнопки «В корзину» — генерация =====
+            $('.product-body').each(function() {
+                const brand = $(this).find('.product-brand').text();
+                const name = $(this).find('.product-name').text();
+                const priceText = $(this).find('.product-price').text().replace(/[^\d,]/g, '');
+                const price = parseFloat(priceText.replace(',', '.')) || 0;
+                $(this).append('<button class="add-to-cart-btn" data-brand="' + brand + '" data-name="' + name + '" data-price="' + price + '">В корзину</button>');
+            });
+
+            // ===== Выбор размера =====
+            $(document).on('click', '.size-option', function() {
+                $(this).siblings('.size-option').removeClass('selected');
+                $(this).addClass('selected');
+            });
+
+            // ===== Wishlist =====
+            $(document).on('click', '.product-wishlist', function(e) {
+                e.stopPropagation();
+                const icon = $(this).find('i');
+                $(this).toggleClass('active');
+                if ($(this).hasClass('active')) {
+                    icon.removeClass('far').addClass('fas');
+                    showToast('Добавлено в избранное');
+                } else {
+                    icon.removeClass('fas').addClass('far');
+                    showToast('Удалено из избранного');
+                }
+            });
+
+            // ===== Load More Products =====
+            $('#loadMoreBtn').on('click', function() {
+                var $btn = $(this);
+                $('.hidden-products').css('display', 'flex').hide().fadeIn(400);
+                $btn.hide();
+            });
+
+            // ===== Корзина =====
+            let cart = [];
+
+            function updateCartUI() {
+                const count = cart.reduce((sum, item) => sum + 1, 0);
+                $('#cartCount').text(count);
+
+                const cartItems = $('#cartItems');
+                cartItems.empty();
+
+                if (cart.length === 0) {
+                    cartItems.html('<p style="color: var(--gray); font-weight: 200; text-align: center; padding: 30px 0;">Корзина пуста</p>');
+                    $('#cartTotal').text('€0');
+                    return;
+                }
+
+                let total = 0;
+                cart.forEach(function(item, index) {
+                    total += item.price;
+                    cartItems.append(
+                        '<div class="cart-item">' +
+                            '<div class="cart-item-info">' +
+                                '<div class="cart-item-brand">' + item.brand + '</div>' +
+                                '<div class="cart-item-name">' + item.name + '</div>' +
+                                '<div class="cart-item-size">Размер: ' + item.size + '</div>' +
+                            '</div>' +
+                            '<div class="cart-item-price">€' + item.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '</div>' +
+                            '<button class="cart-item-remove" data-index="' + index + '"><i class="fas fa-times"></i></button>' +
+                        '</div>'
+                    );
+                });
+
+                $('#cartTotal').text('€' + total.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ','));
+            }
+
+            $(document).on('click', '.add-to-cart-btn', function() {
+                const card = $(this).closest('.product-card');
+                const brand = $(this).data('brand');
+                const name = $(this).data('name');
+                const price = $(this).data('price');
+                const selectedSize = card.find('.size-option.selected');
+
+                if (selectedSize.length === 0) {
+                    showToast('Пожалуйста, выберите размер');
+                    card.find('.product-sizes').css('opacity', '1');
+                    return;
+                }
+
+                const size = selectedSize.text();
+
+                cart.push({ brand: brand, name: name, price: price, size: size });
+                updateCartUI();
+                showToast(name + ' добавлен в корзину');
+
+                // Анимация кнопки
+                const btn = $(this);
+                btn.text('Добавлено ✓').css({ background: 'var(--accent)', color: 'var(--black)' });
+                setTimeout(function() {
+                    btn.text('В корзину').css({ background: 'transparent', color: 'var(--accent)' });
+                }, 1500);
+            });
+
+            $(document).on('click', '.cart-item-remove', function() {
+                const index = $(this).data('index');
+                const removed = cart.splice(index, 1)[0];
+                updateCartUI();
+                showToast(removed.name + ' удалён из корзины');
+            });
+
+            $('#checkoutBtn').on('click', function() {
+                if (cart.length === 0) {
+                    showToast('Корзина пуста');
+                    return;
+                }
+                localStorage.setItem('noirCart', JSON.stringify(cart));
+                window.location.href = 'checkout.html';
+            });
+
+            // ===== Подписка на рассылку =====
+            $('#subscribeBtn').on('click', function(e) {
+                e.preventDefault();
+                const email = $('#newsletterEmail').val().trim();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                if (!email) {
+                    showToast('Введите email');
+                    return;
+                }
+                if (!emailRegex.test(email)) {
+                    showToast('Некорректный email');
+                    return;
+                }
+
+                showToast('Вы подписались на рассылку!');
+                $('#newsletterEmail').val('');
+            });
+
+            // ===== Smooth scroll навигация =====
+            const sectionMap = {
+                'Home': '.hero-section',
+                'Shop': '.products-section',
+                'Collections': '.carousel-section',
+                'About': '.brands-section',
+                'Contact': '.footer-noir'
+            };
+
+            $('.navbar-noir .nav-link').on('click', function(e) {
+                const text = $(this).text().trim();
+                if (sectionMap[text]) {
+                    e.preventDefault();
+                    const target = $(sectionMap[text]);
+                    if (target.length) {
+                        $('html, body').animate({ scrollTop: target.offset().top - 70 }, 700);
+                    }
+                }
+                // Закрыть мобильное меню
+                $('.navbar-collapse').collapse('hide');
+            });
+
+            // ===== Анимация появления при скролле =====
+            let countersAnimated = false;
+
+            $(window).on('scroll', function() {
+                const scrollTop = $(this).scrollTop();
+
+                // Параллакс hero
+                const heroHeight = $('#heroSection').outerHeight();
+                if (scrollTop < heroHeight) {
+                    const parallaxOffset = scrollTop * 0.4;
+                    $('#heroBg').css('transform', 'translateY(' + parallaxOffset + 'px)');
+                    $('#heroVideo').css('transform', 'translate(-50%, calc(-50% + ' + parallaxOffset + 'px))');
+                }
+
+                // Fade-in элементы
+                $('.fade-in').each(function() {
+                    const top = $(this).offset().top;
+                    const bottom = scrollTop + $(window).height();
+                    if (top < bottom - 60) {
+                        $(this).addClass('visible');
+                    }
+                });
+
+                // Анимация счётчиков
+                if (!countersAnimated) {
+                    const $stats = $('.stats-section');
+                    if ($stats.length) {
+                        const statsTop = $stats.offset().top;
+                        if (statsTop < scrollTop + $(window).height() - 100) {
+                            countersAnimated = true;
+                            animateCounters();
+                        }
+                    }
+                }
+
+                if (scrollTop > 80) {
+                    $('.navbar-noir').addClass('scrolled');
+                } else {
+                    $('.navbar-noir').removeClass('scrolled');
+                }
+
+                // Back to Top visibility
+                if (scrollTop > 400) {
+                    $('#backToTop').addClass('visible');
+                } else {
+                    $('#backToTop').removeClass('visible');
+                }
+            });
+
+            $(window).trigger('scroll');
+
+            // ===== Анимация счётчиков =====
+            function animateCounters() {
+                $('.stat-number').each(function() {
+                    const $el = $(this);
+                    const target = parseInt($el.data('target'));
+                    const duration = 2000;
+                    const start = 0;
+                    const startTime = performance.now();
+
+                    function update(currentTime) {
+                        const elapsed = currentTime - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+                        // easeOutExpo
+                        const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+                        const current = Math.floor(eased * target);
+
+                        if (target >= 1000) {
+                            $el.text(current.toLocaleString() + '+');
+                        } else {
+                            $el.text(current + '+');
+                        }
+
+                        if (progress < 1) {
+                            requestAnimationFrame(update);
+                        }
+                    }
+
+                    requestAnimationFrame(update);
+                });
+            }
+
+            // ===== Parallax Philosophy =====
+            const philosophyBg = document.getElementById('philosophyBg');
+            if (philosophyBg) {
+                $(window).on('scroll', function() {
+                    const section = $('.philosophy-section');
+                    const rect = section[0].getBoundingClientRect();
+                    const windowH = window.innerHeight;
+                    if (rect.top < windowH && rect.bottom > 0) {
+                        const progress = (windowH - rect.top) / (windowH + rect.height);
+                        const offset = (progress - 0.5) * 80;
+                        philosophyBg.style.transform = 'translateY(' + offset + 'px)';
+                    }
+                });
+            }
+
+            // ===== Trends Scroll Navigation =====
+            const trendsTrack = document.getElementById('trendsTrack');
+            if (trendsTrack) {
+                const scrollAmount = 300;
+                $('#trendPrev').on('click', function() {
+                    trendsTrack.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                });
+                $('#trendNext').on('click', function() {
+                    trendsTrack.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                });
+                // Drag scroll
+                let isDown = false, startX, scrollLeft;
+                trendsTrack.addEventListener('mousedown', function(e) {
+                    isDown = true;
+                    startX = e.pageX - trendsTrack.offsetLeft;
+                    scrollLeft = trendsTrack.scrollLeft;
+                    trendsTrack.style.cursor = 'grabbing';
+                });
+                trendsTrack.addEventListener('mouseleave', function() { isDown = false; trendsTrack.style.cursor = ''; });
+                trendsTrack.addEventListener('mouseup', function() { isDown = false; trendsTrack.style.cursor = ''; });
+                trendsTrack.addEventListener('mousemove', function(e) {
+                    if (!isDown) return;
+                    e.preventDefault();
+                    const x = e.pageX - trendsTrack.offsetLeft;
+                    trendsTrack.scrollLeft = scrollLeft - (x - startX) * 1.5;
+                });
+            }
+
+            // ===== Видео: play по ховеру =====
+            $('.video-card').on('mouseenter', function() {
+                const vid = $(this).find('video')[0];
+                if (vid) {
+                    vid.play().catch(function(){});
+                }
+            }).on('mouseleave', function() {
+                const vid = $(this).find('video')[0];
+                if (vid) {
+                    vid.pause();
+                    vid.currentTime = 0;
+                }
+            });
+
+            // ===== Back to Top =====
+            $('#backToTop').on('click', function() {
+                $('html, body').animate({ scrollTop: 0 }, 700);
+            });
+
+            // ===== Support Chat =====
+            const chatToggle = document.getElementById('chatToggle');
+            const chatWindow = document.getElementById('chatWindow');
+            const chatClose = document.getElementById('chatClose');
+            const chatInput = document.getElementById('chatInput');
+            const chatSend = document.getElementById('chatSend');
+            const chatMessages = document.getElementById('chatMessages');
+            let chatOpen = false;
+            let chatFirstOpen = true;
+
+            // Show toggle after 5s on page
+            setTimeout(function() { chatToggle.classList.add('visible'); }, 5000);
+            // Show dot after 15s to hint
+            setTimeout(function() {
+                if (!chatOpen) chatToggle.classList.add('has-dot');
+            }, 15000);
+
+            function toggleChat() {
+                chatOpen = !chatOpen;
+                chatWindow.classList.toggle('open', chatOpen);
+                chatToggle.classList.remove('has-dot');
+                if (chatOpen) {
+                    if (chatFirstOpen) {
+                        chatFirstOpen = false;
+                        setTimeout(function() {
+                            addBotMsg('Выберите тему или напишите вопрос:\n• Доставка\n• Возврат\n• Размеры\n• Наличие');
+                        }, 800);
+                    }
+                    chatInput.focus();
+                }
+            }
+
+            chatToggle.addEventListener('click', toggleChat);
+            chatClose.addEventListener('click', function() { chatOpen = false; chatWindow.classList.remove('open'); });
+
+            function getTimeStr() {
+                const d = new Date();
+                return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+            }
+
+            function addUserMsg(text) {
+                chatMessages.insertAdjacentHTML('beforeend',
+                    '<div class="chat-msg user"><div class="chat-bubble">' + text + '</div><div class="chat-time">' + getTimeStr() + '</div></div>');
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function addBotMsg(text) {
+                chatMessages.insertAdjacentHTML('beforeend',
+                    '<div class="chat-msg bot"><div class="chat-bubble">' + text.replace(/\n/g, '<br>') + '</div><div class="chat-time">' + getTimeStr() + '</div></div>');
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            const botReplies = {
+                'доставка': 'Доставка по Москве — 1-2 дня, по России — 3-7 дней. Международная — 7-14 дней. Бесплатно от €500.',
+                'возврат': 'Возврат в течение 14 дней с момента получения. Товар должен быть без следов носки с бирками. Оформить возврат можно в личном кабинете.',
+                'размер': 'Рекомендуем сверяться с таблицей размеров на странице товара. Если сомневаетесь — закажите два размера, возврат бесплатный.',
+                'размеры': 'Рекомендуем сверяться с таблицей размеров на странице товара. Если сомневаетесь — закажите два размера, возврат бесплатный.',
+                'наличие': 'Актуальное наличие отображается на странице товара. Если размер не доступен — нажмите «Уведомить» и мы напишем, когда он появится.',
+                'оплата': 'Принимаем карты Visa/Mastercard/МИР, Apple Pay, Google Pay. Также доступна оплата при получении для заказов по России.',
+                'скидка': 'Подпишитесь на рассылку и получите 10% на первый заказ. Также следите за нашими дропами — там эксклюзивные цены.',
+                'контакты': 'Email: hello@noir.store\nTelegram: @noir_support\nТелефон: +7 (495) 123-45-67\nРежим: 10:00–22:00 МСК'
+            };
+
+            function getBotReply(text) {
+                const lower = text.toLowerCase();
+                for (const key in botReplies) {
+                    if (lower.includes(key)) return botReplies[key];
+                }
+                return 'Спасибо за вопрос! Сейчас уточним и вернёмся к вам. Среднее время ответа — 5 минут. Также можете написать нам на hello@noir.store';
+            }
+
+            function sendChat() {
+                const text = chatInput.value.trim();
+                if (!text) return;
+                addUserMsg(text);
+                chatInput.value = '';
+                // Bot reply with typing delay
+                setTimeout(function() { addBotMsg(getBotReply(text)); }, 800 + Math.random() * 700);
+            }
+
+            chatSend.addEventListener('click', sendChat);
+            chatInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') sendChat();
+            });
+
+            // ===== Particles =====
+            (function() {
+                const canvas = document.getElementById('particlesCanvas');
+                if (!canvas) return;
+                const ctx = canvas.getContext('2d');
+                let particles = [];
+                const count = 40;
+
+                function resize() {
+                    const hero = document.getElementById('heroSection');
+                    if (!hero) return;
+                    canvas.width = hero.offsetWidth;
+                    canvas.height = hero.offsetHeight;
+                }
+                resize();
+                $(window).on('resize', resize);
+
+                for (let i = 0; i < count; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        r: Math.random() * 1.5 + 0.5,
+                        dx: (Math.random() - 0.5) * 0.3,
+                        dy: (Math.random() - 0.5) * 0.3,
+                        opacity: Math.random() * 0.4 + 0.1
+                    });
+                }
+
+                function draw() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    particles.forEach(function(p) {
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                        ctx.fillStyle = 'rgba(201, 169, 110, ' + p.opacity + ')';
+                        ctx.fill();
+
+                        p.x += p.dx;
+                        p.y += p.dy;
+
+                        if (p.x < 0) p.x = canvas.width;
+                        if (p.x > canvas.width) p.x = 0;
+                        if (p.y < 0) p.y = canvas.height;
+                        if (p.y > canvas.height) p.y = 0;
+                    });
+                    requestAnimationFrame(draw);
+                }
+                draw();
+            })();
+
+            // ===== Product Filter =====
+            let activeBrandFilter = 'all';
+
+            function applyFilters() {
+                const priceVal = $('#priceFilter').val();
+                let priceMin = 0, priceMax = Infinity;
+                if (priceVal !== 'all') {
+                    const parts = priceVal.split('-');
+                    priceMin = parseInt(parts[0]);
+                    priceMax = parseInt(parts[1]);
+                }
+
+                $('#productsGrid > .col-lg-3').each(function() {
+                    const brand = $(this).find('.product-brand').text().trim();
+                    const priceText = $(this).find('.product-price').text().replace(/[^\d]/g, '');
+                    const price = parseInt(priceText) || 0;
+
+                    const brandMatch = (activeBrandFilter === 'all' || brand === activeBrandFilter);
+                    const priceMatch = (price >= priceMin && price <= priceMax);
+
+                    if (brandMatch && priceMatch) {
+                        $(this).removeClass('product-col-hidden');
+                    } else {
+                        $(this).addClass('product-col-hidden');
+                    }
+                });
+            }
+
+            $(document).on('click', '.filter-btn', function() {
+                $('.filter-btn').removeClass('active');
+                $(this).addClass('active');
+                activeBrandFilter = $(this).data('filter');
+                applyFilters();
+            });
+
+            $('#priceFilter').on('change', function() {
+                applyFilters();
+            });
+
+            // ===== Lookbook parallax =====
+            $(window).on('scroll', function() {
+                const scrollTop = $(this).scrollTop();
+                const $lb = $('.lookbook-section');
+                if ($lb.length) {
+                    const lbTop = $lb.offset().top;
+                    const lbHeight = $lb.outerHeight();
+                    if (scrollTop + $(window).height() > lbTop && scrollTop < lbTop + lbHeight) {
+                        const offset = (scrollTop - lbTop) * 0.3;
+                        $lb.find('.lookbook-bg').css('transform', 'translateY(' + offset + 'px)');
+                    }
+                }
+            });
+
+            // ===== Toast уведомления =====
+            function showToast(message) {
+                const toast = $('<div class="toast-noir">' + message + '</div>');
+                $('#toastContainer').append(toast);
+                setTimeout(function() { toast.addClass('show'); }, 10);
+                setTimeout(function() {
+                    toast.removeClass('show');
+                    setTimeout(function() { toast.remove(); }, 400);
+                }, 2500);
+            }
+
+        });
+    </script>
+</body>
+</html>

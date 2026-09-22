@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOIR — Личный кабинет</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/account.css">
+</head>
+<body>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-noir fixed-top">
+        <div class="container">
+            <a href="index.html" class="brand-noir">NOIR</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="category.html?cat=all">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Collections</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+                </ul>
+                <div class="nav-icons">
+                    <a href="#" class="nav-icon-link"><i class="fas fa-search"></i></a>
+                    <a href="account.html" class="nav-icon-link" style="color:var(--accent)"><i class="far fa-user"></i></a>
+                    <a href="#" class="nav-icon-link"><i class="fas fa-shopping-bag"></i><span class="cart-count">0</span></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="page-header">
+        <div class="container">
+            <div class="page-label">Account</div>
+            <h1 class="page-title">Личный кабинет</h1>
+            <div class="page-line"></div>
+            <ul class="breadcrumb-noir">
+                <li><a href="index.html">Главная</a></li>
+                <li class="separator">/</li>
+                <li class="active">Личный кабинет</li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="account-section">
+        <div class="container">
+            <div class="account-layout">
+                <aside class="account-sidebar">
+                    <div class="account-avatar" id="avatarInitials">АК</div>
+                    <div class="account-user-name" id="userName">Александр К.</div>
+                    <div class="account-user-email">alexander@noir.store</div>
+                    <div class="sidebar-divider"></div>
+                    <ul class="sidebar-nav">
+                        <li><a href="#" class="sidebar-link active" data-panel="profile"><i class="far fa-user"></i> Профиль</a></li>
+                        <li><a href="#" class="sidebar-link" data-panel="orders"><i class="fas fa-box"></i> Заказы <span class="link-badge">3</span></a></li>
+                        <li><a href="#" class="sidebar-link" data-panel="wishlist"><i class="far fa-heart"></i> Избранное <span class="link-badge">4</span></a></li>
+                        <li><a href="#" class="sidebar-link" data-panel="addresses"><i class="fas fa-map-marker-alt"></i> Адреса</a></li>
+                        <li><a href="#" class="sidebar-link" data-panel="settings"><i class="fas fa-cog"></i> Настройки</a></li>
+                    </ul>
+                    <div class="sidebar-logout">
+                        <a href="index.html" class="sidebar-link" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+                    </div>
+                </aside>
+
+                <div class="account-content">
+                    <!-- PROFILE -->
+                    <div class="account-panel active" id="panel-profile">
+                        <div class="panel-header"><div><div class="panel-title">Профиль</div><div class="panel-subtitle">Управление личной информацией</div></div></div>
+                        <div class="form-card">
+                            <div class="form-card-title">Личные данные</div>
+                            <div class="form-row"><div class="form-group col-md-6"><label class="form-label-noir">Имя</label><input type="text" class="form-control form-noir" value="Александр"></div><div class="form-group col-md-6"><label class="form-label-noir">Фамилия</label><input type="text" class="form-control form-noir" value="Кузнецов"></div></div>
+                            <div class="form-row"><div class="form-group col-md-6"><label class="form-label-noir">Email</label><input type="email" class="form-control form-noir" value="alexander@noir.store"></div><div class="form-group col-md-6"><label class="form-label-noir">Телефон</label><input type="tel" class="form-control form-noir" value="+7 (999) 123-45-67"></div></div>
+                            <div class="form-row"><div class="form-group col-md-4"><label class="form-label-noir">Дата рождения</label><input type="text" class="form-control form-noir" value="15 марта 1995" readonly></div><div class="form-group col-md-4"><label class="form-label-noir">Пол</label><input type="text" class="form-control form-noir" value="Мужской" readonly></div><div class="form-group col-md-4"><label class="form-label-noir">Регистрация</label><input type="text" class="form-control form-noir" value="12 янв 2025" readonly></div></div>
+                            <div style="margin-top:24px"><button class="btn-noir btn-accent btn-sm" id="saveProfileBtn">Сохранить</button></div>
+                        </div>
+                        <div class="form-card">
+                            <div class="form-card-title">Смена пароля</div>
+                            <div class="form-row"><div class="form-group col-md-4"><label class="form-label-noir">Текущий</label><input type="password" class="form-control form-noir" placeholder="••••••••"></div><div class="form-group col-md-4"><label class="form-label-noir">Новый</label><input type="password" class="form-control form-noir" placeholder="••••••••"></div><div class="form-group col-md-4"><label class="form-label-noir">Подтвердить</label><input type="password" class="form-control form-noir" placeholder="••••••••"></div></div>
+                            <div style="margin-top:24px"><button class="btn-noir btn-accent btn-sm" id="changePassBtn">Сменить пароль</button></div>
+                        </div>
+                    </div>
+
+                    <!-- ORDERS -->
+                    <div class="account-panel" id="panel-orders">
+                        <div class="panel-header"><div><div class="panel-title">Заказы</div><div class="panel-subtitle">История заказов</div></div></div>
+                        <div class="order-card">
+                            <div class="order-header"><div><div class="order-id">#NR-2025-0847</div><div class="order-date">28 апреля 2025</div></div><span class="order-status status-delivered">Доставлен</span></div>
+                            <div class="order-body">
+                                <div class="order-item"><img class="order-item-img" src="photo/balenci.jpg" alt=""><div class="order-item-info"><div class="order-item-brand">Balenciaga</div><div class="order-item-name">Oversized Leather Jacket</div><div class="order-item-meta">Размер: L × 1</div></div><div class="order-item-price">€3,200</div></div>
+                                <div class="order-item"><img class="order-item-img" src="photo/images.jpeg" alt=""><div class="order-item-info"><div class="order-item-brand">ERD</div><div class="order-item-name">Distressed Knit Sweater</div><div class="order-item-meta">Размер: M × 1</div></div><div class="order-item-price">€1,450</div></div>
+                            </div>
+                            <div class="order-footer"><div class="order-total-label">Итого</div><div class="order-total-value">€4,650</div></div>
+                        </div>
+                        <div class="order-card">
+                            <div class="order-header"><div><div class="order-id">#NR-2025-0912</div><div class="order-date">3 мая 2025</div></div><span class="order-status status-shipping">В пути</span></div>
+                            <div class="order-body">
+                                <div class="order-item"><img class="order-item-img" src="photo/31156069_60491599_600.webp" alt=""><div class="order-item-info"><div class="order-item-brand">Maison Margiela</div><div class="order-item-name">Tabi Boots Leather</div><div class="order-item-meta">Размер: 42 × 1</div></div><div class="order-item-price">€1,590</div></div>
+                            </div>
+                            <div class="order-footer"><div class="order-total-label">Итого</div><div class="order-total-value">€1,590</div></div>
+                        </div>
+                        <div class="order-card">
+                            <div class="order-header"><div><div class="order-id">#NR-2025-1023</div><div class="order-date">5 мая 2025</div></div><span class="order-status status-processing">Обработка</span></div>
+                            <div class="order-body">
+                                <div class="order-item"><img class="order-item-img" src="photo/Enfants Riches Déprimés байкерская куртка на молнии.webp" alt=""><div class="order-item-info"><div class="order-item-brand">ERD</div><div class="order-item-name">Biker Jacket</div><div class="order-item-meta">Размер: M × 1</div></div><div class="order-item-price">€2,450</div></div>
+                                <div class="order-item"><img class="order-item-img" src="photo/ACNE STUDIOS Face Patch Beanie.webp" alt=""><div class="order-item-info"><div class="order-item-brand">Acne Studios</div><div class="order-item-name">Face Patch Beanie</div><div class="order-item-meta">Размер: ONE × 1</div></div><div class="order-item-price">€200</div></div>
+                            </div>
+                            <div class="order-footer"><div class="order-total-label">Итого</div><div class="order-total-value">€2,650</div></div>
+                        </div>
+                    </div>
+
+                    <!-- WISHLIST -->
+                    <div class="account-panel" id="panel-wishlist">
+                        <div class="panel-header"><div><div class="panel-title">Избранное</div><div class="panel-subtitle">Сохранённые товары</div></div></div>
+                        <div class="wishlist-grid">
+                            <div class="wishlist-card"><div class="wishlist-img"><img src="photo/images 2.jpeg" alt=""><div class="wishlist-remove"><i class="fas fa-times"></i></div></div><div class="wishlist-body"><div class="wishlist-brand">Rick Owens</div><div class="wishlist-name">DRKSHDW Cargo Pants</div><div class="wishlist-price">€1,260</div><button class="wishlist-add-cart">В корзину</button></div></div>
+                            <div class="wishlist-card"><div class="wishlist-img"><img src="photo/come des garcons.jpeg" alt=""><div class="wishlist-remove"><i class="fas fa-times"></i></div></div><div class="wishlist-body"><div class="wishlist-brand">Comme des Garçons</div><div class="wishlist-name">Play Heart Hoodie</div><div class="wishlist-price">€680</div><button class="wishlist-add-cart">В корзину</button></div></div>
+                            <div class="wishlist-card"><div class="wishlist-img"><img src="photo/Balenciaga кроссовки 3XL с сетчатыми вставками.webp" alt=""><div class="wishlist-remove"><i class="fas fa-times"></i></div></div><div class="wishlist-body"><div class="wishlist-brand">Balenciaga</div><div class="wishlist-name">3XL Sneakers</div><div class="wishlist-price">€1,150</div><button class="wishlist-add-cart">В корзину</button></div></div>
+                            <div class="wishlist-card"><div class="wishlist-img"><img src="photo/undercover.jpeg" alt=""><div class="wishlist-remove"><i class="fas fa-times"></i></div></div><div class="wishlist-body"><div class="wishlist-brand">Undercover</div><div class="wishlist-name">Scab Graphic Tee</div><div class="wishlist-price">€420</div><button class="wishlist-add-cart">В корзину</button></div></div>
+                        </div>
+                    </div>
+
+                    <!-- ADDRESSES -->
+                    <div class="account-panel" id="panel-addresses">
+                        <div class="panel-header"><div><div class="panel-title">Адреса</div><div class="panel-subtitle">Адреса доставки</div></div></div>
+                        <div class="address-grid">
+                            <div class="address-card default"><span class="address-default-badge">По умолчанию</span><div class="address-name">Александр Кузнецов</div><div class="address-line">ул. Тверская, 12, кв. 47<br>Москва, 125009, Россия</div><div class="address-line" style="margin-top:8px">+7 (999) 123-45-67</div><div class="address-actions"><button class="address-action-btn">Редактировать</button><button class="address-action-btn delete">Удалить</button></div></div>
+                            <div class="address-card"><div class="address-name">Александр К.</div><div class="address-line">Невский пр-т, 28, оф. 12<br>Санкт-Петербург, 191186, Россия</div><div class="address-line" style="margin-top:8px">+7 (999) 123-45-67</div><div class="address-actions"><button class="address-action-btn">Редактировать</button><button class="address-action-btn">По умолчанию</button><button class="address-action-btn delete">Удалить</button></div></div>
+                            <div class="add-address-card"><div class="add-address-icon"><i class="fas fa-plus"></i></div><div class="add-address-text">Добавить адрес</div></div>
+                        </div>
+                    </div>
+
+                    <!-- SETTINGS -->
+                    <div class="account-panel" id="panel-settings">
+                        <div class="panel-header"><div><div class="panel-title">Настройки</div><div class="panel-subtitle">Уведомления и предпочтения</div></div></div>
+                        <div class="form-card">
+                            <div class="form-card-title">Уведомления</div>
+                            <div class="setting-row"><div class="setting-info"><div class="setting-label">Email-рассылка</div><div class="setting-desc">Новости коллекций и эксклюзивные предложения</div></div><div class="toggle-switch active" data-setting="newsletter"></div></div>
+                            <div class="setting-row"><div class="setting-info"><div class="setting-label">Уведомления о заказах</div><div class="setting-desc">Статус доставки и изменения</div></div><div class="toggle-switch active" data-setting="orders"></div></div>
+                            <div class="setting-row"><div class="setting-info"><div class="setting-label">Скидки и акции</div><div class="setting-desc">Персональные скидки и промокоды</div></div><div class="toggle-switch" data-setting="promo"></div></div>
+                            <div class="setting-row"><div class="setting-info"><div class="setting-label">Новые поступления</div><div class="setting-desc">Уведомления о новых товарах</div></div><div class="toggle-switch active" data-setting="newarrivals"></div></div>
+                        </div>
+                        <div class="form-card">
+                            <div class="form-card-title">Аккаунт</div>
+                            <div class="setting-row"><div class="setting-info"><div class="setting-label">Двухфакторная аутентификация</div><div class="setting-desc">Дополнительный уровень защиты</div></div><div class="toggle-switch" data-setting="2fa"></div></div>
+                            <div class="setting-row"><div class="setting-info"><div class="setting-label">Удалить аккаунт</div><div class="setting-desc">Все данные будут удалены безвозвратно</div></div><button class="btn-noir btn-sm" style="border-color:#c0392b;color:#c0392b" id="deleteAccountBtn">Удалить</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer-noir">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4"><div class="footer-brand">NOIR</div><p class="footer-text">Авангардная мода для тех, кто ценит эстетику тишины. Кураторский отбор лучших авангардных брендов мира.</p></div>
+                <div class="col-lg-2"><div class="footer-heading">Магазин</div><ul class="footer-links"><li><a href="#">Новинки</a></li><li><a href="#">Одежда</a></li><li><a href="#">Обувь</a></li><li><a href="#">Аксессуары</a></li></ul></div>
+                <div class="col-lg-2"><div class="footer-heading">Информация</div><ul class="footer-links"><li><a href="#">О нас</a></li><li><a href="#">Доставка</a></li><li><a href="#">Возврат</a></li><li><a href="#">Контакты</a></li></ul></div>
+                <div class="col-lg-2"><div class="footer-heading">Аккаунт</div><ul class="footer-links"><li><a href="#">Профиль</a></li><li><a href="#">Заказы</a></li><li><a href="#">Избранное</a></li><li><a href="#">Настройки</a></li></ul></div>
+                <div class="col-lg-2"><div class="footer-heading">Соцсети</div><div class="social-links"><a href="#" class="social-link"><i class="fab fa-instagram"></i></a><a href="#" class="social-link"><i class="fab fa-telegram-plane"></i></a><a href="#" class="social-link"><i class="fab fa-pinterest-p"></i></a></div></div>
+            </div>
+            <div class="footer-bottom"><span>© 2025 NOIR. Все права защищены.</span><span>Политика конфиденциальности</span></div>
+        </div>
+    </footer>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/account.js"></script>
+</body>
+</html>
